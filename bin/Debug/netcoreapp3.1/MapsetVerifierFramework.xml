@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MapsetVerifierFramework</name>
+    </assembly>
+    <members>
+        <member name="M:MapsetVerifierFramework.Checker.GetBeatmapSetIssues(MapsetParser.objects.BeatmapSet)">
+            <summary> Returns a list of issues sorted by level, in the given beatmap set. </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.Checker.LoadCheckDLLs">
+            <summary> Loads the .dll files from the current directory + relative path ("/checks" by default). </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.Checker.LoadCheckDLL(System.String)">
+            <summary> Runs the assembly of the given DLL path (can be either absolute or relative), which adds checks to the CheckerRegistry. </summary>
+        </member>
+        <member name="P:MapsetVerifierFramework.Checker.OnLoadStart">
+            <summary> Called whenever the loading of a check is started. </summary>
+        </member>
+        <member name="P:MapsetVerifierFramework.Checker.OnLoadComplete">
+            <summary> Called whenever the loading of a check is completed. </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.CheckerRegistry.RegisterCheck(MapsetVerifierFramework.objects.Check)">
+            <summary> Adds the given check to the list of checks to process when checking for issues. </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.CheckerRegistry.ClearChecks">
+            <summary> Unloads all checks, so that the list of checks to execute becomes empty. </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.CheckerRegistry.GetChecks">
+            <summary> Returns all checks which are processed when checking for issues. </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.CheckerRegistry.GetBeatmapChecks">
+            <summary> Returns checks which are processed beatmap-wise when checking for issues.
+            These are isolated from the set for optimization purposes. </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.CheckerRegistry.GetBeatmapSetChecks">
+            <summary> Returns checks which are processed beatmapset-wise when checking for issues.
+            These are often checks which need to compare between difficulties in a set.</summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.CheckerRegistry.GetGeneralChecks">
+            <summary> Returns checks which are processed beatmapset-wise when checking for issues and stored in a seperate difficulty.
+            These are general checks which are independent from any specific difficulty, for example checking files.</summary>
+        </member>
+        <member name="T:MapsetVerifierFramework.objects.Issue.Level">
+            <summary> The type of issue, index order determines priority when categorizing. </summary>
+        </member>
+        <member name="P:MapsetVerifierFramework.objects.Issue.CheckOrigin">
+            <summary> Populated during the checking process. </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.objects.Issue.AppliesToDifficulty(MapsetParser.objects.Beatmap.Difficulty)">
+            <summary> Whether this issue applies to the given difficulty level according to the metadata and interpretation. </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.objects.Issue.WithOrigin(MapsetVerifierFramework.objects.Check)">
+            <summary> Sets the check origin (i.e. the check instance that created this issue) </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.objects.Issue.ForDifficulties(MapsetParser.objects.Beatmap.Difficulty[])">
+            <summary> Equivalent to using <see cref="M:MapsetVerifierFramework.objects.Issue.WithInterpretation(System.Object[])"/> with first argument "difficulty" and rest cast to integers. </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.objects.Issue.WithInterpretation(System.Object[])">
+            <summary> Sets the data of the issue, which can be used by applications to only show the check in certain settings,
+            for example only for certain difficulty levels, see <see cref="M:MapsetVerifierFramework.objects.Issue.ForDifficulties(MapsetParser.objects.Beatmap.Difficulty[])"/>.
+            <para></para>
+            Takes string, int, and int[]. Example: WithInterpretation("difficulty", 0, 1, 2, "other", 2, 3)</summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.objects.IssueTemplate.#ctor(MapsetVerifierFramework.objects.Issue.Level,System.String,System.Object[])">
+            <summary>
+            Constructs a new issue template with the given issue level, format and default arguments.
+            </summary>
+            <param name="aLevel">The type and priority of the issue (e.g. minor/warning/unrankable).</param>
+            <param name="aFormat">The formatting string, use {0}, {1}, etc to insert arguments.</param>
+            <param name="aDefaultArguments">The default arguments for the format string, supply as many of these as you have {0}, {1}, etc.</param>
+        </member>
+        <member name="M:MapsetVerifierFramework.objects.IssueTemplate.WithCause(System.String)">
+            <summary> Returns the template with a given cause, which will be shown below the issue template in the documentation. </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.objects.IssueTemplate.GetCause">
+            <summary> Returns the cause for the issue, which is shown below the template in the documentation, or null if none is supplied. </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.objects.IssueTemplate.Format(System.Object[])">
+            <summary> Returns the format with {0}, {1}, etc. replaced with the respective given arguments. </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.objects.IssueTemplate.GetDefaultArguments">
+            <summary> Returns the default arguments for this template. </summary>
+        </member>
+        <member name="P:MapsetVerifierFramework.objects.metadata.BeatmapCheckMetadata.Modes">
+            <summary> The mode(s) this check applies to, by default all. </summary>
+        </member>
+        <member name="P:MapsetVerifierFramework.objects.metadata.BeatmapCheckMetadata.Difficulties">
+            <summary> The difficulties this check applies to, by default all. </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.objects.metadata.BeatmapCheckMetadata.#ctor">
+            <summary> Can be initialized like this: <para />
+            new GeneralCheckMetadata() { Category = "", Message = "", Author = "", ...  }</summary>
+        </member>
+        <member name="P:MapsetVerifierFramework.objects.metadata.CheckMetadata.Category">
+            <summary> The name of the category this check falls under, by default "Other". </summary>
+        </member>
+        <member name="P:MapsetVerifierFramework.objects.metadata.CheckMetadata.Message">
+             <summary> A message explaining what went wrong in, preferably, one sentence. By default
+             "Custom check returned one or more issues."
+            <para> "No" is used as prefix in the application if there were no issues, so make sure
+            adding "No" in front of the message makes sense. </para></summary>
+        </member>
+        <member name="P:MapsetVerifierFramework.objects.metadata.CheckMetadata.Author">
+            <summary> The user(s) who developed the check. By default "Unknown". </summary>
+        </member>
+        <member name="P:MapsetVerifierFramework.objects.metadata.CheckMetadata.Documentation">
+            <summary> A list of title-description pairs used to document the intent and reasoning behind the check. By default empty.
+            <para> Checks should not be followed blindly; if someone doubts that the check is worth enforcing,
+            this should convince them it is. </para></summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.objects.metadata.CheckMetadata.#ctor">
+            <summary> Can be initialized like this: <para />
+            new CheckMetadata() { Category = "", Message = "", Author = "", ...  }</summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.objects.resources.AudioBASS.GetFormat(System.String)">
+            <summary> Returns the format of the audio file (e.g. mp3, wav, etc), given the full path. </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.objects.resources.AudioBASS.GetChannels(System.String)">
+            <summary> Returns the channel amount (1 = mono, 2 = stereo, etc), given the full path. </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.objects.resources.AudioBASS.GetDuration(System.String)">
+            <summary> Returns the audio duration in ms, given the full path. </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.objects.resources.AudioBASS.GetBitrate(System.String)">
+            <summary> Returns the average audio bitrate in kbps, given the full path.
+            Seems to have an error margin of about ~0.1 kbps. </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.objects.resources.AudioBASS.GetPeaks(System.String)">
+            <summary> Returns the normalized audio peaks (split by channel) for each ms (List = time, array = channel), 
+            given the full path. </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.objects.resources.AudioFile.GetHighestBitrate">
+            <summary> Returns the highest bitrate, populates if not already present. </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.objects.resources.AudioFile.GetLowestBitrate">
+            <summary> Returns the lowest bitrate, populates if not already present. </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.objects.resources.AudioFile.GetAverageBitrate">
+            <summary> Returns the average bitrate, populates if not already present. </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.objects.resources.AudioFile.LoadBitrates">
+            <summary> Reads through all frames of the mp3 and populates the lowest, highest and average bitrate values. </summary>
+        </member>
+        <member name="M:MapsetVerifierFramework.objects.resources.AudioFile.GetSampleRate">
+            <summary> Returns the sample rate of the first frame in the mp3. This is usually constant. </summary>
+        </member>
+    </members>
+</doc>

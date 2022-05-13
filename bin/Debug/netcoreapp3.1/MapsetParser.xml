@@ -1,0 +1,787 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MapsetParser</name>
+    </assembly>
+    <members>
+        <member name="T:MapsetParser.objects.Beatmap.Sampleset">
+            <summary> Which type of hit sounds are used, does not affect hitnormal if addition. </summary>
+        </member>
+        <member name="T:MapsetParser.objects.Beatmap.Mode">
+            <summary> Which type of game mode the beatmap is for. </summary>
+        </member>
+        <member name="T:MapsetParser.objects.Beatmap.Difficulty">
+            <summary> Which type of difficulty level the beatmap is considered. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.ApplyStacking">
+            <summary> Applies stacking for objects in the beatmap, updating the stack index and position values. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.CanStack(MapsetParser.objects.hitobjects.Stackable,MapsetParser.objects.hitobjects.Stackable)">
+            <summary> Returns whether two stackable objects could be stacked. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.IsStacked(MapsetParser.objects.hitobjects.Stackable,MapsetParser.objects.hitobjects.Stackable)">
+            <summary> Returns whether two stackable objects are currently stacked. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.ShouldStack(MapsetParser.objects.hitobjects.Stackable,MapsetParser.objects.hitobjects.Stackable)">
+            <summary> Returns whether two stackable objects should be stacked, but currently are not. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.CanStackTail(MapsetParser.objects.hitobjects.Slider,MapsetParser.objects.hitobjects.Stackable)">
+            <summary> Returns whether a stackable following a slider could be stacked under the tail
+            (or over in case of slider and slider). </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.IsStackedTail(MapsetParser.objects.hitobjects.Slider,MapsetParser.objects.hitobjects.Stackable)">
+            <summary> Returns whether a stackable following a slider is stacked under the tail
+            (or over in case of slider and slider). </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.ShouldStackTail(MapsetParser.objects.hitobjects.Slider,MapsetParser.objects.hitobjects.Stackable)">
+            <summary> Returns whether a stackable following a slider should be stacked under the slider tail 
+            (or slider over the head in case of slider and slider), but currently is not. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.MeetsStackTime(MapsetParser.objects.hitobjects.Stackable,MapsetParser.objects.hitobjects.Stackable)">
+            <summary> Returns whether two stackable objects are close enough in time to be stacked. Measures from start to start time. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.MeetsStackDistance(MapsetParser.objects.hitobjects.Stackable,MapsetParser.objects.hitobjects.Stackable)">
+            <summary> Returns whether two stackable objects are close enough in space to be stacked. Measures from head to head. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.StackTimeThreshold">
+            <summary> Returns how far apart in time two objects can be and still be able to stack. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.BinaryTimeSearch``1(System.Collections.Generic.List{``0},System.Func{``0,System.Double},System.Double,System.Int32,System.Int32)">
+            <summary> Returns the element in the sorted list where the given time is greater
+            than the element time, but less than the next element time (e.g. the line in effect
+            at some point in time, if we give a list of timing lines).
+            <br></br><br></br>
+            Since the list is sorted, we can use the Binary Search algorithm here to get
+            O(logn) time complexity, instead of O(n), which we would get from linear searching. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetTimingLine(System.Double,System.Boolean)">
+            <summary> Returns the timing line currently in effect at the given time, if any, otherwise the first, O(logn).
+            Optionally with a 5 ms backward leniency for hit sounding. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetTimingLine``1(System.Double,System.Boolean)">
+            <summary> Same as <see cref="M:MapsetParser.objects.Beatmap.GetTimingLine(System.Double,System.Boolean)"/> except only considers objects of a given type. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetNextTimingLine(System.Double)">
+            <summary> Returns the next timing line, if any, otherwise null, O(logn). </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetNextTimingLine``1(System.Double)">
+            <summary> Same as <see cref="M:MapsetParser.objects.Beatmap.GetNextTimingLine(System.Double)"/> except only considers objects of a given type. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetHitObject(System.Double)">
+            <summary> Returns the current or previous hit object if any, otherwise the first, O(logn). </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetHitObject``1(System.Double)">
+            <summary> Same as <see cref="M:MapsetParser.objects.Beatmap.GetHitObject(System.Double)"/> except only considers objects of a given type. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetPrevHitObject(System.Double)">
+            <summary> Returns the previous hit object if any, otherwise the first, O(logn). </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetPrevHitObject``1(System.Double)">
+            <summary> Same as <see cref="M:MapsetParser.objects.Beatmap.GetPrevHitObject(System.Double)"/> except only considers objects of a given type. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetNextHitObject(System.Double)">
+            <summary> Returns the next hit object after the current, if any, otherwise null, O(logn). </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetNextHitObject``1(System.Double)">
+            <summary> Same as <see cref="M:MapsetParser.objects.Beatmap.GetNextHitObject(System.Double)"/> except only considers objects of a given type. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetUnsnapIssue(System.Double)">
+            <summary> Returns the unsnap in ms of notes unsnapped by 2 ms or more, otherwise null. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetComboColourIndex(System.Double)">
+            <summary> Returns the current combo colour number, starts at 0. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetDisplayedComboColourIndex(System.Double)">
+            <summary> Same as <see cref="M:MapsetParser.objects.Beatmap.GetComboColourIndex(System.Double)"/>, except accounts for a bug which makes the last registered colour in
+            the code the first number in the editor. Basically use for display purposes.</summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.AsDisplayedComboColourIndex(System.Int32)">
+            <summary> Accounts for a bug which makes the last registered colour in
+            the code the first number in the editor. Basically use for display purposes.</summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.HasDifficultySpecificStoryboard">
+            <summary> Returns whether a difficulty-specific storyboard is present, does not care about .osb files. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetDifficulty(System.Boolean)">
+            <summary> Returns the interpreted difficulty level based on the star rating of the beatmap
+            (may be inaccurate since recent sr reworks were done), can optionally consider diff names. </summary>
+        </member>
+        <member name="F:MapsetParser.objects.Beatmap.nameDiffPairs">
+            <summary> A list of aliases for difficulty levels. Can't be ambigious with named top diffs, so something
+            like "Lunatic", "Another", or "Special" which could be either Insane or top diff is no good.
+            See https://osu.ppy.sh/help/wiki/Ranking_Criteria/Difficulty_Naming for reference. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetDifficultyName(System.Nullable{MapsetParser.objects.Beatmap.Difficulty})">
+            <summary> Returns the name of the difficulty in a gramatically correct way, for example "an Easy" and "a Normal".
+            Mostly useful for adding in the middle of sentences.</summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetDrainTime">
+            <summary> Returns the complete drain time of the beatmap, accounting for breaks. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetPlayTime">
+            <summary> Returns the play time of the beatmap, starting from the first object and ending at the end of the last object. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetCountdownStartBeat">
+            <summary> Returns the beat number from offset 0 at which the countdown would start, accounting for
+            countdown offset and speed. No countdown if less than 0. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetOffsetIntoBeat(System.Double)">
+            <summary> Returns how many ms into a beat the given time is. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetLowestDivisor(System.Double)">
+            <summary> Returns the lowest possible beat snap divisor to get to the given time with less than 2 ms of unsnap, 0 if unsnapped. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetTheoreticalUnsnap(System.Double)">
+            <summary> Returns the unsnap ignoring all of the game's rounding and other approximations. Can be negative. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetTheoreticalUnsnap(System.Double,System.Int32,MapsetParser.objects.timinglines.UninheritedLine)">
+            <summary> Returns the unsnap, from the given snap divisor, ignoring all of the game's rounding and other approximations. 
+            Optionally supply the uninherited line, instead of the method looking this up itself. The value returned is in terms of
+            how much the object needs to be moved forwards in time to be snapped. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetPracticalUnsnap(System.Double)">
+            <summary> Returns the unsnap accounting for the way the game rounds (or more accurately doesn't round) snapping. <para/>
+            The value returned is in terms of how much the object needs to be moved forwards in time to be snapped. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetPracticalUnsnap(System.Double,System.Int32,MapsetParser.objects.timinglines.UninheritedLine)">
+            <summary> Same as <see cref="M:MapsetParser.objects.Beatmap.GetTheoreticalUnsnap(System.Double,System.Int32,MapsetParser.objects.timinglines.UninheritedLine)"/>, except accounts for the way
+            the game rounds ms times. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetCombo(MapsetParser.objects.HitObject)">
+            <summary> Returns the combo number (the number you see on the notes), of a given hit object. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetObjectDensity">
+            <summary> Returns the hit object count divided by the drain time. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetAudioFilePath">
+            <summary> Returns the full audio file path the beatmap uses if any such file exists, otherwise null. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.GetOsuFileName">
+            <summary> Returns the expected file name of the .osu based on the beatmap's metadata. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Beatmap.ToString">
+            <summary> Returns the beatmap as a string in the format "[Insane]", if the difficulty is called "Insane", for example. </summary>
+        </member>
+        <member name="F:MapsetParser.objects.BeatmapSet.hitSoundFiles">
+            <summary> Used hit sound files' relative path from the song folder. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.BeatmapSet.GetOsbFileName">
+            <summary> Returns the expected .osb file name based on the metadata of the first beatmap if any exists, otherwise null. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.BeatmapSet.GetAudioFilePath">
+            <summary> Returns the full audio file path of the first beatmap in the set if one exists, otherwise null. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.BeatmapSet.GetAudioFileName">
+            <summary> Returns the audio file name of the first beatmap in the set if one exists, otherwise null. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.BeatmapSet.GetLastMatchingFilePath(System.String)">
+            <summary> Returns the last file path matching the given search pattern, relative to the song folder.
+            The search pattern allows two wildcards: * = 0 or more, ? = 0 or 1. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.BeatmapSet.GetUsedHitSoundFiles">
+            <summary> Returns all used hit sound files in the folder. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.BeatmapSet.IsFileUsed(System.String)">
+            <summary> Returns whether the given full file path is used by the beatmapset. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.BeatmapSet.IsAnimationPathUsed(System.String,System.Collections.Generic.List{MapsetParser.objects.events.Animation})">
+            <summary> Returns whether the given path (case insensitive) is used by any of the given animations. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.BeatmapSet.ToString">
+            <summary> Returns the beatmapset as a string in the format "Artist - Title (Creator)". </summary>
+        </member>
+        <member name="M:MapsetParser.objects.events.Animation.GetFrameCount(System.String[])">
+            <summary> Returns the amount of frames this animation contains.
+            Determines how many "filename_i" to use, where i starts at 0. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.events.Animation.GetFrameDelay(System.String[])">
+            <summary> Returns the delay between each frame of this animation in miliseconds. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.events.Animation.IsLooping(System.String[])">
+            <summary> Returns whether the animation loops, by default true. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.events.Animation.GetFramePaths">
+            <summary> Returns all relative file paths for all frames used. </summary>
+        </member>
+        <member name="F:MapsetParser.objects.events.Background.strippedPath">
+            <summary> The path in lowercase without extension or quotationmarks. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.events.Background.GetPath(System.String[])">
+            <summary> Returns the file path which this background uses. Retains case and extension. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.events.Background.GetOffset(System.String[])">
+            <summary> Returns the positional offset from the top left corner of the screen, if specified, otherwise null.
+            This value is currently unused by the game. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.events.Break.GetTime(System.String[])">
+            <summary> Returns the visual start time of the break.
+            See <see cref="M:MapsetParser.objects.events.Break.GetRealStart(MapsetParser.objects.Beatmap)"/> for where HP stops draining. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.events.Break.GetEndTime(System.String[])">
+            <summary> Returns the visual end time of the break.
+            See <see cref="M:MapsetParser.objects.events.Break.GetRealEnd(MapsetParser.objects.Beatmap)"/> for where HP starts draining again. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.events.Break.GetDuration(MapsetParser.objects.Beatmap)">
+            <summary> Returns the duration between the end of the object before the break and the start of the
+            object after it. During this time, no health will be drained. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.events.Break.GetRealStart(MapsetParser.objects.Beatmap)">
+            <summary> Returns the end time of the object before the break. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.events.Break.GetRealEnd(MapsetParser.objects.Beatmap)">
+            <summary> Returns the start time of the object after the break, if any, otherwise the end of the map. </summary>
+        </member>
+        <member name="F:MapsetParser.objects.events.Sample.strippedPath">
+            <summary> The path in lowercase without extension or quotationmarks. </summary>
+        </member>
+        <member name="T:MapsetParser.objects.events.Sample.Layer">
+            <summary> The layer the hit sound is audible on, for example only when passing a section if "Pass". </summary>
+        </member>
+        <member name="M:MapsetParser.objects.events.Sample.GetTime(System.String[])">
+            <summary> Returns after how many miliseconds this storyboard sample will play. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.events.Sample.GetLayer(System.String[])">
+            <summary> Returns on which layer the storyboard sample will play (e.g. Fail or Pass). </summary>
+        </member>
+        <member name="M:MapsetParser.objects.events.Sample.GetPath(System.String[])">
+            <summary> Returns the file path which this sample uses. Retains case and extension. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.events.Sample.GetVolume(System.String[])">
+            <summary> Returns the volume percentage (0-100) that this sample will play at. </summary>
+        </member>
+        <member name="F:MapsetParser.objects.events.Sprite.strippedPath">
+            <summary> The path in lowercase without extension or quotationmarks. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.events.Sprite.GetLayer(System.String[])">
+            <summary> Returns the layer which this sprite exists on (e.g. Foreground, Pass, or Overlay). </summary>
+        </member>
+        <member name="M:MapsetParser.objects.events.Sprite.GetOrigin(System.String[])">
+            <summary> Returns the local origin of the sprite, determining around which point it is transformed
+            (e.g. TopLeft, Center, or Bottom). </summary>
+        </member>
+        <member name="M:MapsetParser.objects.events.Sprite.GetPath(System.String[])">
+            <summary> Returns the file path which this sprite uses. Retains case sensitivity and extension. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.events.Sprite.GetOffset(System.String[])">
+            <summary> Returns the positional offset from the top left corner of the screen, if specified,
+            otherwise default (320, 240). </summary>
+        </member>
+        <member name="F:MapsetParser.objects.events.Video.strippedPath">
+            <summary> The path in lowercase without extension or quotationmarks. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.events.Video.GetOffset(System.String[])">
+            <summary> Returns the temporal offset of the video (i.e. when it should start playing). </summary>
+        </member>
+        <member name="M:MapsetParser.objects.events.Video.GetPath(System.String[])">
+            <summary> Returns the file path which this video uses. Retains case and extension. </summary>
+        </member>
+        <member name="T:MapsetParser.objects.HitObject.HitSound">
+            <summary> Determines which sounds will be played as feedback (can be combined, bitflags). </summary>
+        </member>
+        <member name="T:MapsetParser.objects.HitObject.Type">
+            <summary> Determines the properties of the hit object (can be combined, bitflags). </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.GetHitObjectIndex">
+            <summary> Returns the index of this hit object in the beatmap's hit object list, O(1). </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.SetHitObjectIndex(System.Int32)">
+            <summary> Sets the index of this hit object. This should reflect the index in the hit object list of the beatmap.
+            Only use this if you're changing the order of objects or adding new ones after parsing. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.Next(System.Boolean)">
+            <summary> Returns the next hit object in the hit objects list, if any,
+            otherwise null, O(1). Optionally skips concurrent objects. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.Prev(System.Boolean)">
+            <summary> Returns the previous hit object in the hit objects list, if any,
+            otherwise null, O(1). Optionally skips concurrent objects. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.PrevOrFirst(System.Boolean)">
+            <summary> Returns the previous hit object in the hit objects list, if any,
+            otherwise the first, O(1). Optionally skips concurrent objects. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.GetPrevDeltaStartTime">
+            <summary> <para>Returns the difference in time between the start of this object and the start of the previous object.</para>
+            Note: This always returns at least 50 ms, to mimic the star rating algorithm.</summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.GetPrevStartDistance">
+            <summary> <para>Returns the distance between the edges of the hit circles for the start of this object and the start of the previous object.</para>
+            Note: This adds a bonus scaling factor for small circle sizes, to mimic the star rating algorithm.</summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.HasType(System.String[],MapsetParser.objects.HitObject.Type)">
+            <summary> Returns whether a hit object code has the given type. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.HasHitSound(System.Nullable{MapsetParser.objects.HitObject.HitSound})">
+            <summary> Returns whether the hit object has a hit sound, or optionally a certain type of hit sound. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.GetPrevDeltaTime">
+            <summary> Returns the difference in time between the start of this object and the end of the previous object. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.GetPrevDistance">
+            <summary> Returns the difference in distance between the start of this object and the end of the previous object. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.GetEdgeTimes">
+            <summary> Returns the points in time where heads, tails or reverses exist (i.e. the start, end or reverses of any object). </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.GetCustomIndex(MapsetParser.objects.TimingLine)">
+            <summary> Returns the custom index for the object, if any, otherwise for the line, if any, otherwise 1. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.GetSampleset(System.Boolean,System.Nullable{System.Double})">
+            <summary> Returns the effective sampleset of the hit object (body for sliders), optionally prioritizing the addition. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.GetStartSampleset(System.Boolean)">
+            <summary> Returns the effective sampleset of the head of the object, if applicable, otherwise null, optionally prioritizing the addition.
+            Spinners have no start sample. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.GetEndSampleset(System.Boolean)">
+            <summary> Returns the effective sampleset of the tail of the object, if applicable, otherwise null, optionally prioritizing the addition.
+            Spinners have no start sample. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.GetStartHitSound">
+            <summary> Returns the hit sound(s) of the head of the object, if applicable, otherwise null. 
+            Spinners have no start sample. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.GetEndHitSound">
+            <summary> Returns the hit sound(s) of the tail of the object, if it applicable, otherwise null.
+            Circles and hold notes have no end sample.</summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.GetSliderSlide">
+            <summary> Returns the hit sound(s) of the slide of the object, if applicable, otherwise null.
+            Circles, hold notes and spinners have no sliderslide. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.SplitHitSound(MapsetParser.objects.HitObject.HitSound)">
+            <summary> Returns all individual hit sounds used by a specific hit sound instnace,
+            excluding <see cref="F:MapsetParser.objects.HitObject.HitSound.None"/>. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.GetUsedHitSamples">
+            <summary> Returns all used combinations of customs, samplesets and hit sounds for this object. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.GetUsedHitSamplesNonTaiko">
+            <summary> Returns all used combinations of customs, samplesets and hit sounds for this object.
+            This assumes the game mode is not taiko (special rules apply to taiko only). </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.GetUsedHitSamplesTaiko">
+            <summary> Returns all used combinations of customs, samplesets and hit sounds for this object.
+            Assumes the game mode is taiko (special rules apply).
+            <br></br><br></br>
+            Special Rules:<br></br>
+            - taiko-hitwhistle plays on big kat <br></br>
+            - taiko-hitfinish plays on big don <br></br>
+            - taiko-hitclap and taiko-hitnormal are always used as they play whenever the user presses keys
+            </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.GetUsedHitSoundFileNames">
+            <summary> Returns all potentially used hit sound file names (should they be
+            in the song folder) for this object without extension. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.GetEndTime">
+            <summary> Returns the end time of the hit object, or the start time if no end time exists. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.GetLength">
+            <summary> Returns the length of the hit object, if it has one, otherwise 0. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.GetPartName(System.Double)">
+            <summary> Returns the name of the object part at the given time, for example "Slider head", "Slider reverse", "Circle" or "Spinner tail". </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitObject.GetObjectType">
+            <summary> Returns the name of the object in general, for example "Slider", "Circle", "Hold note", etc. </summary>
+        </member>
+        <member name="T:MapsetParser.objects.hitobjects.Slider.CurveType">
+            <summary> Determines how slider nodes affect the resulting shape of the slider. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.hitobjects.Slider.GetPathPosition(System.Double)">
+            <summary> Returns the position on the curve at a given point in time (intensive, consider using mPathPxPositions). </summary>
+        </member>
+        <member name="M:MapsetParser.objects.hitobjects.Slider.GetSliderSpeed(System.Double)">
+            <summary> Returns the speed of any slider starting from the given time in px/ms. Caps SV within range 0.1-10. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.hitobjects.Slider.GetCurveDuration">
+            <summary> Returns the duration of the curve (i.e. from edge to edge), ignoring reverses. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.hitobjects.Slider.GetStartSampleset(System.Boolean)">
+            <summary> Returns the sampleset on the head of the slider, optionally prioritizing the addition. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.hitobjects.Slider.GetReverseSampleset(System.Int32,System.Boolean)">
+            <summary> Returns the sampleset at a given reverse (starting from 0), optionally prioritizing the addition. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.hitobjects.Slider.GetEndSampleset(System.Boolean)">
+            <summary> Returns the sampleset on the tail of the slider, optionally prioritizing the addition. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.hitobjects.Slider.GetCurveFraction(System.Double)">
+            <summary> Returns how far along the curve a given point of time is (from 0 to 1), accounting for reverses. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.hitobjects.Slider.GetCurveLength">
+            <summary> Returns the length of the curve in px. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.hitobjects.Slider.GetSliderTickTimes">
+            <summary> Returns the points in time for all ticks of the slider, with decimal accuracy. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.hitobjects.Stackable.GetStackOffset(System.Numerics.Vector2)">
+            <summary> Returns the same position but offseted to account for its stacking, if stacked. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitSample.ParseSampleset(System.String)">
+            <summary> Returns the sampleset corresponding to the given text representation, e.g. "drum" or "soft".
+            Unrecognized representation returns null. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitSample.ParseHitSource(System.String)">
+            <summary> Returns the hit source corresponding to the given text representation, e.g. "hitnormal" or "sliderslide".
+            Unrecognized representation returns a hit source of type unknown. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitSample.ParseHitSound(System.String)">
+            <summary> Returns the hit sound corresponding to the given text representation, e.g. "whistle", "clap" or "finish".
+            Unrecognized representation, or N/A (e.g. sliderslide/tick), returns null. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitSample.ParseCustomIndex(System.String)">
+            <summary> Returns the given text as an integer if possible, else 1 (i.e. implicit custom index). </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitSample.GetFileName">
+            <summary> Returns the file name of this sample without extension, or null if no file is associated. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.HitSample.SameFileName(System.String)">
+            <summary> Returns whether the sample file name is the same as the given file name (i.e. same sample file).
+            Ignores case sensitivity. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.Osb.IsUsed">
+            <summary> Returns whether the .osb file is actually used as a storyboard (or if it's just empty). </summary>
+        </member>
+        <member name="M:MapsetParser.objects.TimingLine.GetOffset(System.String[])">
+            <summary> Returns the offset of the line. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.TimingLine.GetMeter(System.String[])">
+            <summary> Returns the meter (i.e. timing signature) of the line. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.TimingLine.GetSampleset(System.String[])">
+            <summary> Returns the sampleset which this line applies to any sample set to Auto sampleset. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.TimingLine.GetCustomIndex(System.String[])">
+            <summary> Returns the custom sample index of the line. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.TimingLine.GetVolume(System.String[])">
+            <summary> Returns the sample volume of the line. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.TimingLine.IsUninherited(System.String[])">
+            <summary> Returns whether a line of code representing a timing line is uninherited or inherited. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.TimingLine.GetType(System.String[])">
+            <summary> Returns whether kiai is enabled for this line. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.TimingLine.GetSvMult(System.String[])">
+            <summary> Returns the slider velocity multiplier (1 for uninherited lines). Fit into range 0.1 - 10 before returning. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.TimingLine.GetTimingLineIndex">
+            <summary> Returns the index of this timing line in the beatmap's timing line list, O(1). </summary>
+        </member>
+        <member name="M:MapsetParser.objects.TimingLine.SetTimingLineIndex(System.Int32)">
+            <summary> Sets the index of this timing line. This should reflect the index in the timing line list of the beatmap.
+            Only use this if you're changing the order of lines or adding new ones after parsing. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.TimingLine.Next(System.Boolean)">
+            <summary> Returns the next timing line in the timing line list, if any,
+            otherwise null, O(1). Optionally skips concurrent lines. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.TimingLine.Prev(System.Boolean)">
+            <summary> Returns the previous timing line in the timing line list, if any,
+            otherwise null, O(1). Optionally skips concurrent objects. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.TimingLine.PrevOrFirst(System.Boolean)">
+            <summary> Returns the previous timing line in the timing line list, if any,
+            otherwise the first, O(1). Optionally skips concurrent objects. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.timinglines.UninheritedLine.GetMsPerBeat(System.String[])">
+            <summary> Returns the miliseconds per beat of the uninherited line. </summary>
+        </member>
+        <member name="M:MapsetParser.objects.timinglines.UninheritedLine.GetBPM">
+            <summary> Returns the beats per minute (BPM) of the uninherited line. </summary>
+        </member>
+        <member name="F:MapsetParser.settings.ColourSettings.combos">
+            <summary> Starts at index 0, so combo colour 1 is the 0th element in the list. </summary>
+        </member>
+        <member name="M:MapsetParser.settings.DifficultySettings.GetCircleRadius">
+            <summary> Returns the radius of a circle or slider from the circle size. </summary>
+        </member>
+        <member name="M:MapsetParser.settings.DifficultySettings.GetFadeInTime">
+            <summary> Returns the time from where the object begins fading in to where it is fully opaque. </summary>
+        </member>
+        <member name="M:MapsetParser.settings.DifficultySettings.GetPreemptTime">
+            <summary> Returns the time from where the object is fully opaque to where it is on the timeline. </summary>
+        </member>
+        <member name="T:MapsetParser.settings.GeneralSettings.Countdown">
+            <summary> The speed at which countdown occurs, if any. Normal is 1 per beat. </summary>
+        </member>
+        <member name="M:MapsetParser.settings.MetadataSettings.GetFileNameFiltered(System.String)">
+            <summary> Returns the same string lowercase and filtered from characters disabled in file names. </summary>
+        </member>
+        <member name="M:MapsetParser.settings.MetadataSettings.GetCoveringTag(System.String)">
+            <summary> Returns the tag which covers the given word, if any, otherwise null. </summary>
+            <param name="searchWord"> The search word which we want a tag covering, cannot contain spaces. </param>
+        </member>
+        <member name="M:MapsetParser.settings.MetadataSettings.GetMissingWordsFromTags(System.String)">
+            <summary> Returns all space-separated strings from the given search term which are not covered by tags
+            (e.g. "One two" with tags "oneth" would return `{ "two" }`). </summary>
+            <param name="searchTerm"> The search term which we want tags covering. </param>
+        </member>
+        <member name="M:MapsetParser.settings.MetadataSettings.IsCoveredByTags(System.String)">
+            <summary> Returns whether all space-separated parts of the given search term is covered by tags
+            (e.g. "Skull Kid" would be covered by "skull_kid"). </summary>
+            <param name="searchTerm"> The search term which we want tags covering. </param>
+        </member>
+        <member name="P:MapsetParser.starrating.DifficultyCalculator.SectionLength">
+            <summary>
+            The length of each strain section.
+            </summary>
+        </member>
+        <member name="M:MapsetParser.starrating.DifficultyCalculator.Calculate">
+            <summary>
+            Calculates the difficulty of the beatmap using a specific mod combination.
+            </summary>
+            <param name="mods">The mods that should be applied to the beatmap.</param>
+            <returns>A structure describing the difficulty of the beatmap.</returns>
+        </member>
+        <member name="M:MapsetParser.starrating.DifficultyCalculator.CalculateAll">
+            <summary>
+            Calculates the difficulty of the beatmap using all mod combinations applicable to the beatmap.
+            </summary>
+            <returns>A collection of structures describing the difficulty of the beatmap for each mod combination.</returns>
+        </member>
+        <member name="M:MapsetParser.starrating.DifficultyCalculator.SortObjects(System.Collections.Generic.IEnumerable{MapsetParser.starrating.preprocessing.DifficultyHitObject})">
+            <summary>
+            Sorts a given set of <see cref="T:MapsetParser.starrating.preprocessing.DifficultyHitObject"/>s.
+            </summary>
+            <param name="input">The <see cref="T:MapsetParser.starrating.preprocessing.DifficultyHitObject"/>s to sort.</param>
+            <returns>The sorted <see cref="T:MapsetParser.starrating.preprocessing.DifficultyHitObject"/>s.</returns>
+        </member>
+        <member name="M:MapsetParser.starrating.DifficultyCalculator.CreateDifficultyAttributes(MapsetParser.objects.Beatmap,MapsetParser.starrating.skills.Skill[])">
+            <summary>
+            Creates <see cref="T:MapsetParser.starrating.DifficultyAttributes"/> to describe beatmap's calculated difficulty.
+            </summary>
+            <param name="beatmap">The <see cref="!:IBeatmap"/> whose difficulty was calculated.</param>
+            <param name="mods">The <see cref="!:Mod"/>s that difficulty was calculated with.</param>
+            <param name="skills">The skills which processed the beatmap.</param>
+            <param name="clockRate">The rate at which the gameplay clock is run at.</param>
+        </member>
+        <member name="M:MapsetParser.starrating.DifficultyCalculator.CreateDifficultyHitObjects(MapsetParser.objects.Beatmap)">
+            <summary>
+            Enumerates <see cref="T:MapsetParser.starrating.preprocessing.DifficultyHitObject"/>s to be processed from <see cref="T:MapsetParser.objects.HitObject"/>s in the <see cref="!:IBeatmap"/>.
+            </summary>
+            <param name="beatmap">The <see cref="!:IBeatmap"/> providing the <see cref="T:MapsetParser.objects.HitObject"/>s to enumerate.</param>
+            <param name="clockRate">The rate at which the gameplay clock is run at.</param>
+            <returns>The enumerated <see cref="T:MapsetParser.starrating.preprocessing.DifficultyHitObject"/>s.</returns>
+        </member>
+        <member name="M:MapsetParser.starrating.DifficultyCalculator.CreateSkills(MapsetParser.objects.Beatmap)">
+            <summary>
+            Creates the <see cref="T:MapsetParser.starrating.skills.Skill"/>s to calculate the difficulty of an <see cref="!:IBeatmap"/>.
+            </summary>
+            <param name="beatmap">The <see cref="!:IBeatmap"/> whose difficulty will be calculated.</param>
+            <returns>The <see cref="T:MapsetParser.starrating.skills.Skill"/>s.</returns>
+        </member>
+        <member name="P:MapsetParser.starrating.osu.preprocessing.OsuDifficultyHitObject.JumpDistance">
+            <summary>
+            Normalized distance from the end position of the previous <see cref="T:MapsetParser.starrating.osu.preprocessing.OsuDifficultyHitObject"/> to the start position of this <see cref="T:MapsetParser.starrating.osu.preprocessing.OsuDifficultyHitObject"/>.
+            </summary>
+        </member>
+        <member name="P:MapsetParser.starrating.osu.preprocessing.OsuDifficultyHitObject.TravelDistance">
+            <summary>
+            Normalized distance between the start and end position of the previous <see cref="T:MapsetParser.starrating.osu.preprocessing.OsuDifficultyHitObject"/>.
+            </summary>
+        </member>
+        <member name="P:MapsetParser.starrating.osu.preprocessing.OsuDifficultyHitObject.Angle">
+            <summary>
+            Angle the player has to take to hit this <see cref="T:MapsetParser.starrating.osu.preprocessing.OsuDifficultyHitObject"/>.
+            Calculated as the angle between the circles (current-2, current-1, current).
+            </summary>
+        </member>
+        <member name="F:MapsetParser.starrating.osu.preprocessing.OsuDifficultyHitObject.StrainTime">
+            <summary>
+            Milliseconds elapsed since the start time of the previous <see cref="T:MapsetParser.starrating.osu.preprocessing.OsuDifficultyHitObject"/>, with a minimum of 50ms.
+            </summary>
+        </member>
+        <member name="T:MapsetParser.starrating.osu.skills.Aim">
+            <summary>
+            Represents the skill required to correctly aim at every object in the map with a uniform CircleSize and normalized distances.
+            </summary>
+        </member>
+        <member name="T:MapsetParser.starrating.osu.skills.Speed">
+            <summary>
+            Represents the skill required to press keys with regards to keeping up with the speed at which objects need to be hit.
+            </summary>
+        </member>
+        <member name="T:MapsetParser.starrating.preprocessing.DifficultyHitObject">
+            <summary>
+            Wraps a <see cref="T:MapsetParser.objects.HitObject"/> and provides additional information to be used for difficulty calculation.
+            </summary>
+        </member>
+        <member name="F:MapsetParser.starrating.preprocessing.DifficultyHitObject.BaseObject">
+            <summary>
+            The <see cref="T:MapsetParser.objects.HitObject"/> this <see cref="T:MapsetParser.starrating.preprocessing.DifficultyHitObject"/> wraps.
+            </summary>
+        </member>
+        <member name="F:MapsetParser.starrating.preprocessing.DifficultyHitObject.LastObject">
+            <summary>
+            The last <see cref="T:MapsetParser.objects.HitObject"/> which occurs before <see cref="F:MapsetParser.starrating.preprocessing.DifficultyHitObject.BaseObject"/>.
+            </summary>
+        </member>
+        <member name="F:MapsetParser.starrating.preprocessing.DifficultyHitObject.DeltaTime">
+            <summary>
+            Amount of time elapsed between <see cref="F:MapsetParser.starrating.preprocessing.DifficultyHitObject.BaseObject"/> and <see cref="F:MapsetParser.starrating.preprocessing.DifficultyHitObject.LastObject"/>.
+            </summary>
+        </member>
+        <member name="M:MapsetParser.starrating.preprocessing.DifficultyHitObject.#ctor(MapsetParser.objects.HitObject,MapsetParser.objects.HitObject)">
+            <summary>
+            Creates a new <see cref="T:MapsetParser.starrating.preprocessing.DifficultyHitObject"/>.
+            </summary>
+            <param name="hitObject">The <see cref="T:MapsetParser.objects.HitObject"/> which this <see cref="T:MapsetParser.starrating.preprocessing.DifficultyHitObject"/> wraps.</param>
+            <param name="lastObject">The last <see cref="T:MapsetParser.objects.HitObject"/> which occurs before <paramref name="hitObject"/> in the beatmap.</param>
+            <param name="clockRate">The rate at which the gameplay clock is run at.</param>
+        </member>
+        <member name="T:MapsetParser.starrating.skills.Skill">
+            <summary>
+            Used to processes strain values of <see cref="T:MapsetParser.starrating.preprocessing.DifficultyHitObject"/>s, keep track of strain levels caused by the processed objects
+            and to calculate a final difficulty value representing the difficulty of hitting all the processed objects.
+            </summary>
+        </member>
+        <member name="P:MapsetParser.starrating.skills.Skill.StrainPeaks">
+            <summary>
+            The peak strain for each <see cref="P:MapsetParser.starrating.DifficultyCalculator.SectionLength"/> section of the beatmap.
+            </summary>
+        </member>
+        <member name="P:MapsetParser.starrating.skills.Skill.SkillMultiplier">
+            <summary>
+            Strain values are multiplied by this number for the given skill. Used to balance the value of different skills between each other.
+            </summary>
+        </member>
+        <member name="P:MapsetParser.starrating.skills.Skill.StrainDecayBase">
+            <summary>
+            Determines how quickly strain decays for the given skill.
+            For example a value of 0.15 indicates that strain decays to 15% of its original value in one second.
+            </summary>
+        </member>
+        <member name="P:MapsetParser.starrating.skills.Skill.DecayWeight">
+            <summary>
+            The weight by which each strain value decays.
+            </summary>
+        </member>
+        <member name="F:MapsetParser.starrating.skills.Skill.Previous">
+            <summary>
+            <see cref="T:MapsetParser.starrating.preprocessing.DifficultyHitObject"/>s that were processed previously. They can affect the strain values of the following objects.
+            </summary>
+        </member>
+        <member name="P:MapsetParser.starrating.skills.Skill.CurrentStrain">
+            <summary>
+            The current strain level.
+            </summary>
+        </member>
+        <member name="M:MapsetParser.starrating.skills.Skill.Process(MapsetParser.starrating.preprocessing.DifficultyHitObject)">
+            <summary>
+            Process a <see cref="T:MapsetParser.starrating.preprocessing.DifficultyHitObject"/> and update current strain values accordingly.
+            </summary>
+        </member>
+        <member name="M:MapsetParser.starrating.skills.Skill.SaveCurrentPeak">
+            <summary>
+            Saves the current peak strain level to the list of strain peaks, which will be used to calculate an overall difficulty.
+            </summary>
+        </member>
+        <member name="M:MapsetParser.starrating.skills.Skill.StartNewSectionFrom(System.Double)">
+            <summary>
+            Sets the initial strain level for a new section.
+            </summary>
+            <param name="time">The beginning of the new section in milliseconds.</param>
+        </member>
+        <member name="M:MapsetParser.starrating.skills.Skill.GetPeakStrain(System.Double)">
+            <summary>
+            Retrieves the peak strain at a point in time.
+            </summary>
+            <param name="time">The time to retrieve the peak strain at.</param>
+            <returns>The peak strain.</returns>
+        </member>
+        <member name="M:MapsetParser.starrating.skills.Skill.DifficultyValue">
+            <summary>
+            Returns the calculated difficulty value representing all processed <see cref="T:MapsetParser.starrating.preprocessing.DifficultyHitObject"/>s.
+            </summary>
+        </member>
+        <member name="M:MapsetParser.starrating.skills.Skill.StrainValueOf(MapsetParser.starrating.preprocessing.DifficultyHitObject)">
+            <summary>
+            Calculates the strain value of a <see cref="T:MapsetParser.starrating.preprocessing.DifficultyHitObject"/>. This value is affected by previously processed objects.
+            </summary>
+        </member>
+        <member name="T:MapsetParser.starrating.utils.LimitedCapacityStack`1">
+            <summary>
+            An indexed stack with limited depth. Indexing starts at the top of the stack.
+            </summary>
+        </member>
+        <member name="P:MapsetParser.starrating.utils.LimitedCapacityStack`1.Count">
+            <summary>
+            The number of elements in the stack.
+            </summary>
+        </member>
+        <member name="M:MapsetParser.starrating.utils.LimitedCapacityStack`1.#ctor(System.Int32)">
+            <summary>
+            Constructs a new <see cref="T:MapsetParser.starrating.utils.LimitedCapacityStack`1"/>.
+            </summary>
+            <param name="capacity">The number of items the stack can hold.</param>
+        </member>
+        <member name="P:MapsetParser.starrating.utils.LimitedCapacityStack`1.Item(System.Int32)">
+            <summary>
+            Retrieves the item at an index in the stack.
+            </summary>
+            <param name="i">The index of the item to retrieve. The top of the stack is returned at index 0.</param>
+        </member>
+        <member name="M:MapsetParser.starrating.utils.LimitedCapacityStack`1.Push(`0)">
+            <summary>
+            Pushes an item to this <see cref="T:MapsetParser.starrating.utils.LimitedCapacityStack`1"/>.
+            </summary>
+            <param name="item">The item to push.</param>
+        </member>
+        <member name="M:MapsetParser.starrating.utils.LimitedCapacityStack`1.GetEnumerator">
+            <summary>
+            Returns an enumerator which enumerates items in the history starting from the most recently added one.
+            </summary>
+        </member>
+        <member name="P:MapsetParser.statics.EventStatic.OnLoadStart">
+            <summary> Called whenever loading of something is started. </summary>
+        </member>
+        <member name="P:MapsetParser.statics.EventStatic.OnLoadComplete">
+            <summary> Called whenever loading of something is completed. </summary>
+        </member>
+        <member name="M:MapsetParser.statics.ParserStatic.ParseSection``1(System.String[],System.String,System.Func{System.String,``0})">
+            <summary> Yields the result of the given function for each line in this section. </summary>
+        </member>
+        <member name="M:MapsetParser.statics.ParserStatic.GetSettings``1(System.String[],System.String,System.Func{System.String[],``0})">
+            <summary> Returns all the lines in this section ran through the given function, excluding
+            the section identifier (e.g. [HitObjects]). </summary>
+        </member>
+        <member name="M:MapsetParser.statics.ParserStatic.ApplySettings(System.String[],System.String,System.Action{System.String[]})">
+            <summary> Same as <see cref="M:MapsetParser.statics.ParserStatic.GetSettings``1(System.String[],System.String,System.Func{System.String[],``0})"/> except does not return. </summary>
+        </member>
+        <member name="M:MapsetParser.statics.ParserStatic.GetEnumMatch``1(System.String)">
+            <summary> Returns the first enum which has the same name as the given string,
+            or null if none match. </summary>
+        </member>
+        <member name="M:MapsetParser.statics.PathStatic.ParsePath(System.String,System.Boolean,System.Boolean)">
+            <summary> Returns the file path in its base form as seen by the game, optionally allowing
+            extensions to be stripped or maintaining case. </summary>
+        </member>
+        <member name="M:MapsetParser.statics.PathStatic.CutPath(System.String)">
+            <summary> Returns the file or folder name rather than its path. Takes the last split of "\\" and "/". </summary>
+        </member>
+        <member name="M:MapsetParser.statics.PathStatic.RelativePath(System.String,System.String)">
+            <summary> Returns the file path relative to another path, usually song path in most cases. </summary>
+        </member>
+        <member name="M:MapsetParser.statics.SkinStatic.IsUsed(System.String,MapsetParser.objects.BeatmapSet)">
+            <summary> Returns whether the given skin name is used in the given beatmapset (including animations). </summary>
+        </member>
+        <member name="M:MapsetParser.statics.Timestamp.Round(System.Double)">
+            <summary> Returns the given time as an integer in the way the game rounds time values. </summary>
+            <remarks>
+                Interestingly, the game currently does not round, but rather cast to integer. This may
+                change in future versions of the game to fix issues such as 1 ms rounding errors when
+                copying objects, however.
+            </remarks>
+        </member>
+        <member name="M:MapsetParser.statics.Timestamp.Get(System.Double)">
+            <summary> Returns the timestamp of a given time. If decimal, is rounded in the same way the game rounds. </summary>
+        </member>
+        <member name="M:MapsetParser.statics.Timestamp.Get(MapsetParser.objects.HitObject[])">
+            <summary> Returns the timestamp of given hit objects, so the timestamp includes the object(s). </summary>
+        </member>
+    </members>
+</doc>

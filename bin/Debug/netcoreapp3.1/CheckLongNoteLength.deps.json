@@ -1,0 +1,115 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.1",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "CheckLongNoteLength/1.0.0": {
+        "dependencies": {
+          "MapsetParser": "1.0.0",
+          "MapsetVerifierFramework": "1.0.0"
+        },
+        "runtime": {
+          "CheckLongNoteLength.dll": {}
+        }
+      },
+      "ManagedBass/2.0.4": {
+        "runtime": {
+          "lib/netstandard1.4/ManagedBass.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "MathNet.Numerics/5.0.0-alpha08": {
+        "runtime": {
+          "lib/netstandard2.0/MathNet.Numerics.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.0.0"
+          }
+        }
+      },
+      "NAudio/1.9.0": {
+        "runtime": {
+          "lib/netstandard2.0/NAudio.dll": {
+            "assemblyVersion": "1.9.0.0",
+            "fileVersion": "1.9.0.0"
+          }
+        }
+      },
+      "TagLib.Portable/1.0.4": {
+        "runtime": {
+          "lib/portable-net45+win+wpa81+wp8+MonoAndroid10+xamarinios10+MonoTouch10/TagLib.Portable.dll": {
+            "assemblyVersion": "2.2.0.0",
+            "fileVersion": "2.2.0.0"
+          }
+        }
+      },
+      "MapsetParser/1.0.0": {
+        "dependencies": {
+          "MathNet.Numerics": "5.0.0-alpha08"
+        },
+        "runtime": {
+          "MapsetParser.dll": {}
+        }
+      },
+      "MapsetVerifierFramework/1.0.0": {
+        "dependencies": {
+          "ManagedBass": "2.0.4",
+          "NAudio": "1.9.0",
+          "TagLib.Portable": "1.0.4"
+        },
+        "runtime": {
+          "MapsetVerifierFramework.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "CheckLongNoteLength/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ManagedBass/2.0.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+jpks5wa2CAGsT/nQJiv493+KBNujreMOZ2U19r2qsddIst/TQQiueMODSOLgyncODTBIQM3mGDiCHSXXs7ACg==",
+      "path": "managedbass/2.0.4",
+      "hashPath": "managedbass.2.0.4.nupkg.sha512"
+    },
+    "MathNet.Numerics/5.0.0-alpha08": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Hu/i3gxr/3ZwadSgStvjbxdqVLI68USa8X5imu2tYEEK0CzGBUPuYYucmDYUG7zjKAyLhDFyzdlXS6LdKa2rDw==",
+      "path": "mathnet.numerics/5.0.0-alpha08",
+      "hashPath": "mathnet.numerics.5.0.0-alpha08.nupkg.sha512"
+    },
+    "NAudio/1.9.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-PjcPhL5AnbF1YmZxqFYuAEVVRNCNWWIm6Gi32AGQ0dmHF9+s7TUFfVxEo46MbeIfpUE+Wz60ZNTLMXTxBI1m9w==",
+      "path": "naudio/1.9.0",
+      "hashPath": "naudio.1.9.0.nupkg.sha512"
+    },
+    "TagLib.Portable/1.0.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-c/Van3wkeEhN2TtQH8soZdD+vixe/ZsczC9ciRXgEY6txp1TlaIEzHtiRxQGZPVVXWFlxXcl0pn/vqr0nYVD3w==",
+      "path": "taglib.portable/1.0.4",
+      "hashPath": "taglib.portable.1.0.4.nupkg.sha512"
+    },
+    "MapsetParser/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "MapsetVerifierFramework/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
