@@ -1,1 +1,3 @@
 Reminder of stuff that has to be updated on already built plugins:
+
+- CheckSevenChord.cs: This implementation currently works fine. However, it outputs two timestamps on the MV Client. This should be an easy fix but I'm going mad trying to spot in what stupid place have I done goofed.
