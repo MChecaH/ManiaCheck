@@ -1,4 +1,4 @@
-# ManiaCheck (BETA)
+![ManiaCheck (BETA)](https://i.imgur.com/uWTpvxK.png)
 osu!mania plugin for Naxess' Mapset verifier. Includes various extra checks for osu!mania. These have been requested by Beatmap Nominators, but any extra check can be added if we need to!
 
 ## Current Plugins
