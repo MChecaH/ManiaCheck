@@ -9,6 +9,7 @@ namespace ManiaChecks
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             CheckerRegistry.RegisterCheck(new CheckOdHp());
             CheckerRegistry.RegisterCheck(new CheckLNL());
+            CheckerRegistry.RegisterCheck(new CheckSeven());
         }
     }
 }
