@@ -8,6 +8,8 @@ osu!mania plugin for [Naxess' Mapset verifier](https://github.com/Naxesss/Mapset
 
 **- Max Chord Size:** Checks if [Easy](https://osu.ppy.sh/wiki/en/Ranking_Criteria/osu!mania#easy)/[Normal](https://osu.ppy.sh/wiki/en/Ranking_Criteria/osu!mania#normal)/[Hard](https://osu.ppy.sh/wiki/en/Ranking_Criteria/osu!mania#hard)/[Insane](https://osu.ppy.sh/wiki/en/Ranking_Criteria/osu!mania#insane) difficulties respect their given Max Chord Size guidelines in their respective Keymodes.
 
+**- Hitnormal detector:** Detects whether a set disposes of a custom hitnormal sample in its Files or not.
+
 ## How to Install
 Excerpt taken from [Naxess' original Mapset Verifier repository](https://github.com/Naxesss/MapsetVerifier).
 
