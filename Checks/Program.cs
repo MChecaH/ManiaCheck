@@ -10,6 +10,7 @@ namespace ManiaChecks
             CheckerRegistry.RegisterCheck(new CheckOdHp());
             CheckerRegistry.RegisterCheck(new CheckLNL());
             CheckerRegistry.RegisterCheck(new CheckSeven());
+            CheckerRegistry.RegisterCheck(new checkHN());
         }
     }
 }
