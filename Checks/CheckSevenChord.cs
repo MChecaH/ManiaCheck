@@ -1,11 +1,12 @@
 using MapsetParser.objects;
-using MapsetParser.objects.hitobjects;
 using MapsetParser.statics;
 using MapsetVerifierFramework.objects;
 using MapsetVerifierFramework.objects.attributes;
 using MapsetVerifierFramework.objects.metadata;
+using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace ManiaChecks
 {
@@ -15,7 +16,8 @@ namespace ManiaChecks
         public override CheckMetadata GetMetadata() => new BeatmapCheckMetadata()
         {
             Modes = new Beatmap.Mode[] { Beatmap.Mode.Mania },
-            Difficulties = new Beatmap.Difficulty[] {
+            Difficulties = new Beatmap.Difficulty[] 
+            {
                 Beatmap.Difficulty.Easy,
                 Beatmap.Difficulty.Normal,
                 Beatmap.Difficulty.Hard,
@@ -48,37 +50,116 @@ namespace ManiaChecks
             {
                 {
                 "Warning",
-                    new IssueTemplate(Issue.Level.Problem,
-                        "{0} The chord should not have more than 6 notes.", 
-                        "timestamp - ")
+                    new IssueTemplate(Issue.Level.Warning,
+                        "{0} Chords should not have more than {1} notes in {2}K for the given difficulty.", 
+                        "timestamp - ", "maxChordSize", "keymode")
                     .WithCause("Chord bigger than expected.")
                 }
             };
         }
 
+        /// <summary> Updated difficulty dictionary for Mania </summary>
+        private readonly Dictionary<Beatmap.Difficulty, IEnumerable<string>> maniaDiffList =
+            new Dictionary<Beatmap.Difficulty, IEnumerable<string>>() {
+                { Beatmap.Difficulty.Easy,   new List<string>(){ "EZ", "Beginner", "Begginning", "Basic", "Easy"} },
+                { Beatmap.Difficulty.Normal, new List<string>(){ "NM", "Normal", "Novice"} },
+                { Beatmap.Difficulty.Hard,   new List<string>(){ "HD", "Hard","Advanced", "Hyper"} },
+                { Beatmap.Difficulty.Insane, new List<string>(){ "MX", "SC", "Another", "Exhaust", "Insane"} },
+                { Beatmap.Difficulty.Expert, new List<string>(){ "SHD", "EX", "Black Another",  "Infinite", "Gravity", "Heavenly", "Maximum", "Extra", "White Another", "Vivid", "Exceed" } }
+            };
+
+        /// <summary> Updated "getDifficultyFromName" method from MapsetParser only for Mania </summary>
+        private Beatmap.Difficulty getManiaDifficulty(string version)
+        {
+            var pairs = maniaDiffList.Reverse();
+            foreach (var pair in maniaDiffList)
+                if (pair.Value.Any(value => new Regex(@$"(?i)(^| )[!-@\[-`{{-~]*{value}[!-@\[-`{{-~]*( |$)").IsMatch(version)))
+                    return pair.Key;
+            
+            //In case no difficulty name is found, it will assume it's ambiguous
+            return Beatmap.Difficulty.Ultra;     
+        }
+
         public override IEnumerable<Issue> GetIssues(Beatmap beatmap)
-        {   
-            // Modifiable maximum value for the chord's size
-            const int maxChordSize = 7;
+        {
+            // Get current diff for the "switch" to evaluate
+            Beatmap.Difficulty difficulty = getManiaDifficulty(beatmap.metadataSettings.version);
 
-            // First iteration will skip the first value but still count it as if two notes were together.
+            // Get the chart's Keymode
+            float keymode = beatmap.difficultySettings.circleSize;
+
             int counter = 1;
-
-            foreach (var currentObject in beatmap.hitObjects.Skip(1))
-            {
+            foreach (var currentObject in beatmap.hitObjects.Skip(1)) {
                 var prevObject = currentObject.Prev();
+                var timestamp = Timestamp.Get(prevObject);
 
                 if (prevObject.time == currentObject.time)
                     ++counter;
                 else
                     counter = 1;
+
+                // Prior check to avoid having to go through... all of the stuff below... I am sorry.   
+                if (counter < 3) continue;
                 
-                if (counter == maxChordSize) {
-                    counter = 1;
-                    yield return new Issue(GetTemplate("Problem"),
-                        beatmap, Timestamp.Get(currentObject));
+                // What difficulty to check for module
+                switch (difficulty) {
+                    case Beatmap.Difficulty.Easy:
+                    {
+                        if (counter == 3) 
+                        {
+                            yield return new Issue(GetTemplate("Warning"),
+                                beatmap, timestamp.Substring(0, timestamp.IndexOf(" ")), 2, keymode);
+                            counter = 1;
+                        }
+                        break;
+                    }
+
+                    case Beatmap.Difficulty.Normal:
+                    {
+                        if (counter == 4 && keymode >= 7)
+                        {
+                            yield return new Issue(GetTemplate("Warning"),
+                                beatmap, timestamp.Substring(0, timestamp.IndexOf(" ")), 3, keymode);
+                            counter = 1;
+                        }
+                        else if (counter == 3 && keymode >= 4 && keymode < 7) 
+                        {
+                            yield return new Issue(GetTemplate("Warning"),
+                                beatmap, timestamp.Substring(0, timestamp.IndexOf(" ")), 2, keymode);
+                            counter = 1;
+                        }
+                        break;
+                    }
+
+                    case Beatmap.Difficulty.Hard:
+                    {
+                        if (counter == 5 && keymode >= 7)
+                        {
+                            yield return new Issue(GetTemplate("Warning"),
+                                beatmap, timestamp.Substring(0, timestamp.IndexOf(" ")), 4, keymode);
+                            counter = 1;
+                        }
+                        else if (counter == 4 && keymode >= 4 && keymode < 7)
+                        {
+                            yield return new Issue(GetTemplate("Warning"),
+                                beatmap, timestamp.Substring(0, timestamp.IndexOf(" ")), 3, keymode);
+                            counter = 1;
+                        }
+                        break;
+                    }
+
+                    case Beatmap.Difficulty.Insane:
+                    {
+                        if (counter == 7) 
+                        {
+                            yield return new Issue(GetTemplate("Warning"),
+                                beatmap, timestamp.Substring(0, timestamp.IndexOf(" ")), 7, keymode);
+                            counter = 1;
+                        }
+                        break;
+                    }
                 }
-            }
-        }
+            }       
+        }   
     }
 }
