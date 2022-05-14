@@ -1,5 +1,4 @@
 using MapsetParser.objects;
-using MapsetParser.settings;
 using MapsetVerifierFramework.objects;
 using MapsetVerifierFramework.objects.attributes;
 using MapsetVerifierFramework.objects.metadata;
@@ -59,6 +58,13 @@ namespace ManiaChecks
                         "{0} should not have an OD value over {1}, currently {2}.",
                         "difficulty", "max od", "current od")
                     .WithCause("One of the difficulties' OD breaches the RC limits.")
+                },
+                {
+                "Ambiguous",
+                    new IssueTemplate(Issue.Level.Minor,
+                        "Difficulty name {0} is ambiguous. Please ensure that HP {1} and OD {2} make sense to use.",
+                        "difficulty", "current hp", "current od")
+                    .WithCause("One of the difficulties uses an ambiguous naming schema.")
                 }
             };
         }
