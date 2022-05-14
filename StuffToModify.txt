@@ -2,3 +2,5 @@ Reminder of stuff that has to be updated on already built plugins:
 
 - [RESOLVED] CheckSevenChord.cs: This implementation currently works fine. However, it outputs two timestamps on the MV Client. This should be an easy fix but I'm going mad trying to spot in what stupid place have I done goofed.
 -> Solution: Changed it into a generalized Check for ALL Chord sizes across ALL difficulties and keymodes. Stripped the object info and only displayed the Timestamp.
+
+- CheckMaxChordSize.cs && CheckOdHpENH.cs: Both of them are using a wacky solution to determine the difficulty via its actual difficulty name. In the future, we need to find a way to better assess the difficulty of a chart. My idea would be to allow MapsetParser to store the SR value of Mania maps once the SR Rework is done in the future. However, if anyone finds a better refactor right now, feel free to hit me up. 
