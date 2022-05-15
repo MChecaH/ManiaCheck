@@ -1,5 +1,6 @@
 using MapsetParser.objects;
 using MapsetVerifierFramework.objects;
+using MapsetParser.statics;
 using MapsetVerifierFramework.objects.attributes;
 using MapsetVerifierFramework.objects.metadata;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace ManiaChecks
         {
             Modes = new Beatmap.Mode[] { Beatmap.Mode.Mania }, 
             Category = "Hit Sounds",
-            Message = "No Hitnormal sample found.",
+            Message = "Hitnormal sample not found.",
             Author = "RandomeLoL",
 
             Documentation = new Dictionary<string, string>()
@@ -37,9 +38,16 @@ namespace ManiaChecks
             return new Dictionary<string, IssueTemplate>
             {
                 {
-                "No Hitnormal",
+                "No Hitnormal in Files",
                     new IssueTemplate(Issue.Level.Problem,
                         "No Hitnormal sample can be seen in the Beatmapset's folder.")
+                    .WithCause("Cannot find a \"Hitnormal\" sample in the set's Files.")
+                },
+                {
+                "No Hitnormal in Beatmap",
+                    new IssueTemplate(Issue.Level.Problem,
+                        "{0} No custom Hitnormal sample overwriting default.",
+                        "timestamp")
                     .WithCause("Cannot find a \"Hitnormal\" sample in the set's Files.")
                 }
             };
@@ -48,9 +56,15 @@ namespace ManiaChecks
         public override IEnumerable<Issue> GetIssues(BeatmapSet beatmapSet)
         {
             List<string> hsList = beatmapSet.hitSoundFiles;
-            if (hsList.Count == 0 ? true : !hasHitNormal(hsList))
+            if (hsList.Count == 0) 
                 foreach (Beatmap beatmap in beatmapSet.beatmaps)
-                    yield return new Issue(GetTemplate("No Hitnormal"), beatmap);
+                    yield return new Issue(GetTemplate("No Hitnormal in Files"), beatmap);
+
+            else 
+            foreach (Beatmap beatmap in beatmapSet.beatmaps)
+                foreach (var hitObject in beatmap.hitObjects)
+                    if (hitObject.filename == null && !hasHitNormal(hsList))
+                        yield return new Issue(GetTemplate("No Hitnormal in Beatmap"), beatmap, Timestamp.Get(hitObject));
         }
     }
 }
