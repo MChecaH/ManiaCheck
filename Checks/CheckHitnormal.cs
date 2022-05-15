@@ -2,9 +2,8 @@ using MapsetParser.objects;
 using MapsetVerifierFramework.objects;
 using MapsetVerifierFramework.objects.attributes;
 using MapsetVerifierFramework.objects.metadata;
-using System.Text.RegularExpressions;
 using System.Collections.Generic;
-using System;
+using static ManiaChecks.Utils;
 
 namespace ManiaChecks
 {
@@ -44,21 +43,6 @@ namespace ManiaChecks
                     .WithCause("Cannot find a \"Hitnormal\" sample in the set's Files.")
                 }
             };
-        }
-
-        /// <summary> https://stackoverflow.com/a/30300521 </summary>
-        private static String WildCardToRegular(String value) 
-        {
-            return "^" + Regex.Escape(value).Replace("\\*", ".*") + "$"; 
-        }
-
-        /// <summary> Checks whether the Hitsound list of a Beatmapset has any acceptable hitnormal sample </summary>
-        private static bool hasHitNormal(List<string> hsList)
-        {
-            foreach (var HS in hsList) 
-                if (Regex.IsMatch(HS, WildCardToRegular("*-hitnormal*")))
-                    return true;
-            return false;
         }
 
         public override IEnumerable<Issue> GetIssues(BeatmapSet beatmapSet)
