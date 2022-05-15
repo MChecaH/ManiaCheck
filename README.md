@@ -17,7 +17,7 @@ As a primary goal, we should try to accomplish the first checks requested by the
 
 Moreover, other suggested plugins by their *(respective users)* were:
 
-**-*(Dudehacker)* HS Difficulty Warning:** Detect if there's still a HS Diff present in a set. This is heavily geared towards BNs who'd want to avoid [this](https://imgur.com/a/JDCg2pB) before nominating a set.
+**-*(Dudehacker)* HS Difficulty Warning:** Detect if there's still a HS Diff present in a set. This is heavily geared towards BNs who'd want to avoid [this](https://imgur.com/aBrmnky) before nominating a set.
 
 ## How to Install
 Excerpt taken from [Naxess' original Mapset Verifier repository](https://github.com/Naxesss/MapsetVerifier).
