@@ -1,7 +1,7 @@
 ![ManiaCheck (BETA)](https://i.imgur.com/uWTpvxK.png)
+![](https://i.imgur.com/2uwVyDO.gif)
 # Mania Extension Project [BETA]
-osu!mania plugin for [Naxess' Mapset verifier](https://github.com/Naxesss/MapsetVerifier). Includes various extra checks for osu!mania. These have been requested by Beatmap Nominators, but any extra check can be added if we need to!
-
+osu!mania plugin for [Naxess' Mapset verifier](https://github.com/Naxesss/MapsetVerifier). Includes various extra checks for osu!mania. This is **not a standalone tool**. Requires Mapset Verifier. These have been requested by Beatmap Nominators, but any extra check can be added if we need to!
 ## Current Plugins
 **- [WARNING / PROBLEM] Long Note Length Check:** Checks if Long Notes are shorter than the minimum recommended in the Ranking Criteria.
 
