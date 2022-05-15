@@ -3,7 +3,7 @@
 osu!mania plugin for [Naxess' Mapset verifier](https://github.com/Naxesss/MapsetVerifier). Includes various extra checks for osu!mania. These have been requested by Beatmap Nominators, but any extra check can be added if we need to!
 
 ## Current Plugins
-**- [WARNING / PROBLEM]Long Note Length Check:** Checks if Long Notes are shorter than the minimum recommended in the Ranking Criteria.
+**- [WARNING / PROBLEM] Long Note Length Check:** Checks if Long Notes are shorter than the minimum recommended in the Ranking Criteria.
 
 **- [WARNING] OD/HP Check:** Checks if [Easy](https://osu.ppy.sh/wiki/en/Ranking_Criteria/osu!mania#easy)/[Normal](https://osu.ppy.sh/wiki/en/Ranking_Criteria/osu!mania#normal)/[Hard](https://osu.ppy.sh/wiki/en/Ranking_Criteria/osu!mania#hard) difficulties surpass the maximum allowed HP/OD values or not. Treated as a Warning as MV is not reliable when it comes to difficulty.
 
