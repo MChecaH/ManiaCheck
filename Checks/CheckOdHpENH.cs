@@ -2,10 +2,9 @@ using MapsetParser.objects;
 using MapsetVerifierFramework.objects;
 using MapsetVerifierFramework.objects.attributes;
 using MapsetVerifierFramework.objects.metadata;
-using System.Text.RegularExpressions;
 using System.Collections.Generic;
-using System.Linq;
 using System;
+using static ManiaChecks.Utils;
 
 namespace ManiaChecks
 {
@@ -67,28 +66,6 @@ namespace ManiaChecks
                     .WithCause("One of the difficulties uses an ambiguous naming schema.")
                 }
             };
-        }
-
-        /// <summary> Updated difficulty dictionary for Mania </summary>
-        private readonly Dictionary<Beatmap.Difficulty, IEnumerable<string>> maniaDiffList =
-            new Dictionary<Beatmap.Difficulty, IEnumerable<string>>() {
-                { Beatmap.Difficulty.Easy,   new List<string>(){ "EZ", "Beginner", "Begginning", "Basic", "Easy"} },
-                { Beatmap.Difficulty.Normal, new List<string>(){ "NM", "Normal", "Novice"} },
-                { Beatmap.Difficulty.Hard,   new List<string>(){ "HD", "Hard", "Advanced", "Hyper"} },
-                { Beatmap.Difficulty.Insane, new List<string>(){ "MX", "SC", "Another", "Exhaust", "Insane"} },
-                { Beatmap.Difficulty.Expert, new List<string>(){ "SHD", "EX", "Black Another",  "Infinite", "Gravity", "Heavenly", "Maximum", "Extra", "White Another", "Vivid", "Exceed" } }
-            };
-
-        /// <summary> Updated "getDifficultyFromName" method from MapsetParser only for Mania </summary>
-        private Beatmap.Difficulty getManiaDifficulty(string diffName)
-        {
-            var pairs = maniaDiffList.Reverse();
-            foreach (var pair in maniaDiffList)
-                if (pair.Value.Any(value => new Regex(@$"(?i)(^| )[!-@\[-`{{-~]*{value}[!-@\[-`{{-~]*( |$)").IsMatch(diffName)))
-                    return pair.Key;
-            
-            //In case no difficulty name is found, it will assume it's ambiguous
-            return Beatmap.Difficulty.Ultra;     
         }
 
         public override IEnumerable<Issue> GetIssues(Beatmap beatmap)
