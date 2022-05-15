@@ -11,13 +11,15 @@ osu!mania plugin for [Naxess' Mapset verifier](https://github.com/Naxesss/Mapset
 
 **- [PROBLEM] Hitnormal detector:** Detects whether a set disposes of a custom hitnormal sample in its Files or not.
 
+**- [PROBLEM / WARNING] Hitsound difficulty detector:** Detects/Assumes there is a potential Hitsound difficulty still present in the map. It will mark it as a Problem if a difficulty is explicitly named *"Hitsound"* and mark it as a Warning if the map has any sort of Hitsound additions, just as a reminder.
+
 ## Future Goals
 As a primary goal, we should try to accomplish the first checks requested by the BNG
 ![](https://i.imgur.com/Xg8Qis4.png)
 
 Moreover, other suggested plugins by their *(respective users)* were:
 
-**- *(Dudehacker)* HS Difficulty Warning:** Detect if there's still a HS Diff present in a set. This is heavily geared towards BNs who'd want to avoid [this](https://imgur.com/aBrmnky) before nominating a set.
+**- ✔️ *(Dudehacker)* HS Difficulty Warning:** Detect if there's still a HS Diff present in a set. This is heavily geared towards BNs who'd want to avoid [this](https://imgur.com/aBrmnky) before nominating a set.
 
 I am more than open to be tasked with more challenges, but I'll try focusing on the screenshot provided above first and foremost.
 
