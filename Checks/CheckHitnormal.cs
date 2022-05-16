@@ -14,7 +14,7 @@ namespace ManiaChecks
         public override CheckMetadata GetMetadata() => new BeatmapCheckMetadata()
         {
             Modes = new Beatmap.Mode[] { Beatmap.Mode.Mania }, 
-            Category = "Hit Sounds",
+            Category = "Resources",
             Message = "Hitnormal sample not found.",
             Author = "RandomeLoL",
 

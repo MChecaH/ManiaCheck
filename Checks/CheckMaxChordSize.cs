@@ -22,7 +22,7 @@ namespace ManiaChecks
                 Beatmap.Difficulty.Hard,
                 Beatmap.Difficulty.Insane
             },
-            Category = "Compose",
+            Category = "Spread",
             Message = "Chord too big for its difficulty.",
             Author = "RandomeLoL",
 
