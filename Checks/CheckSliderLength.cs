@@ -1,10 +1,11 @@
-﻿using MapsetParser.objects;
+using MapsetParser.objects;
 using MapsetParser.objects.hitobjects;
 using MapsetParser.statics;
 using MapsetVerifierFramework.objects;
 using MapsetVerifierFramework.objects.attributes;
 using MapsetVerifierFramework.objects.metadata;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ManiaChecks
 {
