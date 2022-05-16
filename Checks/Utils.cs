@@ -1,7 +1,4 @@
 using MapsetParser.objects;
-using MapsetVerifierFramework.objects;
-using MapsetVerifierFramework.objects.attributes;
-using MapsetVerifierFramework.objects.metadata;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Linq;
