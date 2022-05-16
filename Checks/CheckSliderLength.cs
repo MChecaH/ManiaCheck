@@ -45,16 +45,16 @@ namespace ManiaChecks
                 {
                 "Warning",
                     new IssueTemplate(Issue.Level.Warning,
-                        "{0} Long note held for only ({2} ms)",
-                        "timestamp", "required length", "current length")
+                        "{0} Long note held for only ({1} ms)",
+                        "timestamp", "current length")
                     .WithCause("The long note is a bit shorter than recommended.")
                 },
 
                 {
                 "Problem",
                     new IssueTemplate(Issue.Level.Problem,
-                        "{0} Long note held for only ({2} ms)",
-                        "timestamp", "required length", "current length")
+                        "{0} Long note held for only ({1} ms)",
+                        "timestamp", "current length")
                     .WithCause("The long note is much shorter than recommended.")
                 }
             };
@@ -76,11 +76,11 @@ namespace ManiaChecks
 
                 if (ProblemThreshold > LNLength)
                     yield return new Issue(GetTemplate("Problem"),
-                        beatmap, Timestamp.Get(hitObject), 30, LNLength);
+                        beatmap, Timestamp.Get(hitObject), LNLength);
 
                 else if (WarningThreshold > LNLength)
                     yield return new Issue(GetTemplate("Warning"),
-                        beatmap, Timestamp.Get(hitObject), 30, LNLength);
+                        beatmap, Timestamp.Get(hitObject), LNLength);
             }
         }
     }
