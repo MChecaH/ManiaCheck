@@ -15,7 +15,7 @@ namespace ManiaChecks
         {
             Modes = new Beatmap.Mode[] { Beatmap.Mode.Mania },
             Category = "Compose",
-            Message = "Long Note's length too short.",
+            Message = "Too short long notes (less than 30ms).",
             Author = "RandomeLoL",
 
             Documentation = new Dictionary<string, string>()
@@ -23,7 +23,8 @@ namespace ManiaChecks
                 {
                     "Purpose",
                     @"
-                    Prevent abnormally short Long Notes from being used across the entire spread.
+                    Prevent abnormally short long notes from being used. 
+                    Displays a Problem for long notes held for less than 20ms, and a Warning for long notes held less than 30ms.
                     <image>
                         https://i.imgur.com/S5KYuDJ.png
                         Examples of extremely short LNs, both beyond the Warning and Problem thresholds.
@@ -32,9 +33,7 @@ namespace ManiaChecks
                 {
                     "Reasoning",
                     @"
-                    Due to how Long Notes work in osu!mania, if a Long Note's length is around 30 milliseconds, getting full accuracy on it can be very annoying and unforgiving.
-                    <br><br>
-                    This mainly has to do with human and hardware limitations. Ensuring these shorter LNs are far and few between will ensure that charts will be played much more fairly at no extra cost."
+                    Due to the human and hardware limitations in osu!, osu!mania long notes held for shorter than 1/12 of a beat at 180bpm (~30ms) are unreasonable to play with full accuracy."
                 }
             }
         };
@@ -46,17 +45,17 @@ namespace ManiaChecks
                 {
                 "Warning",
                     new IssueTemplate(Issue.Level.Warning,
-                        "{0} The Long Note should be held for at least {1} ms from start to finish, currently {2} ms.",
-                        "timestamp - ", "required length", "current length")
-                    .WithCause("The Long Note is a bit shorter than expected.")
+                        "{0} Long note held for only ({2} ms)",
+                        "timestamp", "required length", "current length")
+                    .WithCause("The long note is a bit shorter than recommended.")
                 },
 
                 {
                 "Problem",
                     new IssueTemplate(Issue.Level.Problem,
-                        "{0} The Long Note should be held for at least {1} ms from start to finish, currently {2} ms.",
-                        "timestamp - ", "required length", "current length")
-                    .WithCause("The Long Note is much shorter than expected.")
+                        "{0} Long note held for only ({2} ms)",
+                        "timestamp", "required length", "current length")
+                    .WithCause("The long note is much shorter than recommended.")
                 }
             };
         }
