@@ -27,7 +27,7 @@ namespace ManiaChecks
         /// <summary> Updated difficulty dictionary for Mania </summary>
         public static readonly Dictionary<Beatmap.Difficulty, IEnumerable<string>> maniaDiffList =
             new Dictionary<Beatmap.Difficulty, IEnumerable<string>>() {
-                { Beatmap.Difficulty.Easy,   new List<string>(){ "EZ", "Beginner", "Begginning", "Basic", "Easy"} },
+                { Beatmap.Difficulty.Easy,   new List<string>(){ "EZ", "Beginner", "Beginning", "Basic", "Easy"} },
                 { Beatmap.Difficulty.Normal, new List<string>(){ "NM", "Normal", "Novice"} },
                 { Beatmap.Difficulty.Hard,   new List<string>(){ "HD", "Hard", "Advanced", "Hyper"} },
                 { Beatmap.Difficulty.Insane, new List<string>(){ "MX", "SC", "Another", "Exhaust", "Insane", "Lunatic"} },
