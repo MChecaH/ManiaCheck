@@ -73,11 +73,11 @@ namespace ManiaChecks
 
                 if (ProblemThreshold > LNLength)
                     yield return new Issue(GetTemplate("Problem"),
-                        beatmap, Timestamp.Get(hitObject), LNLength);
+                        beatmap, Timestamp.Get(holdNote), LNLength);
 
                 else if (WarningThreshold > LNLength)
                     yield return new Issue(GetTemplate("Warning"),
-                        beatmap, Timestamp.Get(hitObject), LNLength);
+                        beatmap, Timestamp.Get(holdNote), LNLength);
             }
         }
     }
