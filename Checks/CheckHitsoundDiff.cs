@@ -15,7 +15,7 @@ namespace ManiaChecks
         {
             Modes = new Beatmap.Mode[] { Beatmap.Mode.Mania },
             Category = "Files",
-            Message = "Potential Hitsound difficulty found.",
+            Message = "Hitsound difficulty present.",
             Author = "RandomeLoL",
 
             Documentation = new Dictionary<string, string>()
@@ -23,14 +23,13 @@ namespace ManiaChecks
                 {
                     "Purpose",
                     @"
-                    Maps must not be nominated with Hitsound difficulties on them."
+                    Beatmaps must not be nominated with hitsound difficulties still present."
                 },
                 {
                     "Reasoning",
                     @"
-                    Extra difficulties in a spread used as Hitsounding templates are commonly used in Mania as easy ways to copy an entire set of additions into the entiriety of a given spread. These tools ensure Hitsounds to be consistent when transfered over to all difficulties.
-                    <br><br>
-                    However, these extra difficulties aren't meant to be played nor Ranked. These are fully auxiliary and should be promptly deleted once they've served their purpose."
+                    Hitsounding template difficulties are commonly used in osu!mania as an easy way to copy and apply hitsounding across all difficulties of the beatmap. However, they must be deleted before nominating the beatmap.
+                    "
                 }
             }
         };
@@ -40,42 +39,23 @@ namespace ManiaChecks
             return new Dictionary<string, IssueTemplate>()
             {
                 {
-                "Warning",
+                "HitsoundDiff",
                     new IssueTemplate(Issue.Level.Problem,
-                        "{0} has been detected to be a Hitsound diff. Please, ensure you delete it once you're done with it.", "difficulty")
+                        "{0} may be a hitsound difficulty. If it were the case, ensure it is deleted before nominating this beatmap.", "difficulty")
                     .WithCause("Potential Hitsound difficulty detected.")
                 },
-                {
-                "Reminder",
-                    new IssueTemplate(Issue.Level.Warning,
-                        "Custom Hitsound additions detected. Make sure the difficulty they were copied from is no longer in the spread.")
-                    .WithCause("Hitsound Additions detected")
-                }
             };
         }
 
         public override IEnumerable<Issue> GetIssues(BeatmapSet beatmapSet)
         {
-            bool foundDiff = false;
             foreach (Beatmap beatmap in beatmapSet.beatmaps) 
             {
                 string difficulty = beatmap.metadataSettings.version;
-                if (Regex.IsMatch(difficulty, WildCardToRegular("*h*i*t*s*o*u*n*d*"), RegexOptions.IgnoreCase)) 
+                if (Regex.IsMatch(difficulty, WildCardToRegular("*hit*sound*"), RegexOptions.IgnoreCase) | difficulty.Equals("hs", StringComparison.CurrentCultureIgnoreCase)) 
                 {
-                    yield return new Issue(GetTemplate("Warning"), beatmap, difficulty);
-                    foundDiff = true;
+                    yield return new Issue(GetTemplate("HitsoundDiff"), beatmap, difficulty);
                 }
-            }
-
-            if (!foundDiff) 
-            {
-                List<string> hsList = beatmapSet.hitSoundFiles;
-                if (hsList.Count > 1)
-                    foreach (Beatmap beatmap in beatmapSet.beatmaps)
-                    {
-                        string difficulty = beatmap.metadataSettings.version;
-                        yield return new Issue(GetTemplate("Reminder"), beatmap);
-                    }
             }
         }
     }
