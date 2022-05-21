@@ -15,7 +15,7 @@ namespace ManiaChecks
         {
             Modes = new Beatmap.Mode[] { Beatmap.Mode.Mania }, 
             Category = "Resources",
-            Message = "Hitnormal sample not found.",
+            Message = "Missing custom hitnormal",
             Author = "RandomeLoL",
 
             Documentation = new Dictionary<string, string>()
@@ -23,12 +23,12 @@ namespace ManiaChecks
                 {
                     "Purpose",
                     @"
-                    Maps must always dispose of either custom Hitnormal samples or Hitsound additions."
+                    Maps must always have a hitnormal sample."
                 },
                 {
                     "Reasoning",
                     @"
-                    To better enhance their experience, some players might decide to play with Hitsounds on. To be as inclusive as possible, maps are required to, at the very least, have one custom sample to override osu!'s default Hitnormal sample."
+                    To have a better playing experience, some players prefer active hitsound feedback. osu!mania Ranking Criteria mandates maps to have at least a custom sample overriding osu!'s default hitnormal."
                 }
             }
         };
@@ -38,17 +38,17 @@ namespace ManiaChecks
             return new Dictionary<string, IssueTemplate>
             {
                 {
-                "No Hitnormal in Files",
+                "HitnormalFile",
                     new IssueTemplate(Issue.Level.Problem,
-                        "No Hitnormal sample can be seen in the Beatmapset's folder.")
-                    .WithCause("Cannot find a \"Hitnormal\" sample in the set's Files.")
+                        "No hitnormal sample found in beatmap folder")
+                    .WithCause("Cannot find a hitnormal sample in the beatmap folder.")
                 },
                 {
-                "No Hitnormal in Beatmap",
+                "HitnormalOverride",
                     new IssueTemplate(Issue.Level.Problem,
-                        "{0} No custom Hitnormal sample overwriting default.",
+                        "{0} Custom hitnormal isn't overriding default sample.",
                         "timestamp")
-                    .WithCause("Cannot find a \"Hitnormal\" sample in the set's Files.")
+                    .WithCause("A hitnormal file is present, but it's not overwriting the default hitnormal.")
                 }
             };
         }
@@ -58,13 +58,13 @@ namespace ManiaChecks
             List<string> hsList = beatmapSet.hitSoundFiles;
             if (hsList.Count == 0) 
                 foreach (Beatmap beatmap in beatmapSet.beatmaps)
-                    yield return new Issue(GetTemplate("No Hitnormal in Files"), beatmap);
+                    yield return new Issue(GetTemplate("HitnormalFile"), beatmap);
 
             else 
             foreach (Beatmap beatmap in beatmapSet.beatmaps)
                 foreach (var hitObject in beatmap.hitObjects)
                     if (hitObject.filename == null && !hasHitNormal(hsList))
-                        yield return new Issue(GetTemplate("No Hitnormal in Beatmap"), beatmap, Timestamp.Get(hitObject));
+                        yield return new Issue(GetTemplate("HitnormalOverride"), beatmap, Timestamp.Get(hitObject));
         }
     }
 }
