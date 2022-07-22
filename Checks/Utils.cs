@@ -82,5 +82,11 @@ namespace ManiaChecks
             durationList.OrderByDescending(key => key.Value);
             return durationList.Keys.First();
         }
+
+        // <summary> I love working with BeatLength. Converts "beatLength" to "BPM" and viceversa. </summary>
+        public static double bpmConverter (double beatLengthORbpm)
+        {
+            return 60000 / beatLengthORbpm;
+        }
     }
 }
