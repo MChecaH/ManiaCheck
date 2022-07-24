@@ -12,6 +12,7 @@ ManiaCheck is an osu!mania plugin for [Naxess' Mapset verifier](https://github.c
 |:---------:|:---------------------------:|
 | Compose   | Long note too short (<20ms) |
 | Resources | Missing hitnormal           |
+| Timing    | Unnormalized SVs in EZ/NM   |
 
 ### Minor/Unreliable checks (Warnings)
 
@@ -26,9 +27,11 @@ ManiaCheck is an osu!mania plugin for [Naxess' Mapset verifier](https://github.c
 
 ## Planned Checks
 
-- Check that Easy difficulty doesn't have scroll changes
+- ~~Check that Easy difficulty doesn't have scroll changes~~
 - Check whether variable timing maps have scroll Normalisation
+- Check whether normalizing Green Lines are right on top of Red Lines
 - Complete hitsound checks (consistency between difficulties, duplicate hitsounds, etc.)
+- Check for **extremely** close together notes to avoid stuff like [this](https://cdn.discordapp.com/attachments/808360583669874688/996761548536156281/unknown.png).
 
 ## How to Install
 
