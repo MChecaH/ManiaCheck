@@ -52,10 +52,9 @@ namespace ManiaChecks
             foreach (Beatmap beatmap in beatmapSet.beatmaps) 
             {
                 string difficulty = beatmap.metadataSettings.version;
-                if (Regex.IsMatch(difficulty, WildCardToRegular("*hit*sound*"), RegexOptions.IgnoreCase) | difficulty.Equals("hs", StringComparison.CurrentCultureIgnoreCase)) 
-                {
-                    yield return new Issue(GetTemplate("HitsoundDiff"), beatmap, difficulty);
-                }
+                if (Regex.IsMatch(difficulty, WildCardToRegular("*hit*sound*"), RegexOptions.IgnoreCase) | 
+                    Regex.IsMatch(difficulty, WildCardToRegular("_hs_"), RegexOptions.IgnoreCase)) 
+                        yield return new Issue(GetTemplate("HitsoundDiff"), beatmap, difficulty);
             }
         }
     }
