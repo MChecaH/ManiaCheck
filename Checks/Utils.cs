@@ -65,7 +65,7 @@ namespace ManiaChecks
             }
 
             // We add the last time under the assumption it has the same BPM as the last timing point.
-            var lastOffset = timingLineMap.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
+            var lastOffset = timingLineMap.Keys.Last();
             timingLineMap[lastTime] = timingLineMap[lastOffset];
 
             // Then, we create a Dictionary of tuples with (beatLength, totalDuration)
@@ -74,7 +74,9 @@ namespace ManiaChecks
             foreach (KeyValuePair<double, double> timingLine in timingLineMap.Skip(1))
             {
                 var offsetDelta = timingLine.Key - prevTimingLine.Key;
-                durationList[timingLine.Value] += offsetDelta;
+                if (!timingLineMap.ContainsKey(timingLine.Value))
+                    durationList[timingLine.Value] = offsetDelta;
+                else durationList[timingLine.Value] += offsetDelta;
                 prevTimingLine = timingLine;
             }
 
@@ -83,10 +85,16 @@ namespace ManiaChecks
             return durationList.Keys.First();
         }
 
-        // <summary> I love working with BeatLength. Converts "beatLength" to "BPM" and viceversa. </summary>
+        /// <summary> I love working with BeatLength. Converts "beatLength" to "BPM" and viceversa. </summary>
         public static double bpmConverter (double beatLengthORbpm)
         {
             return 60000 / beatLengthORbpm;
+        }
+
+        /// <summary> Checks if two values are almost equal given a third delta value. </summary>
+        public static bool almostEquals (double value1, double value2, double epsilon)
+        {
+            return Math.Abs(value1 - value2) <= epsilon;
         }
     }
 }
