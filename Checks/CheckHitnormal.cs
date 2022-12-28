@@ -1,3 +1,4 @@
+using System.Linq;
 using MapsetParser.objects;
 using MapsetVerifierFramework.objects;
 using MapsetParser.statics;
@@ -46,8 +47,7 @@ namespace ManiaChecks
                 {
                 "HitnormalOverride",
                     new IssueTemplate(Issue.Level.Problem,
-                        "{0} Custom hitnormal isn't overriding default sample.",
-                        "timestamp")
+                        "Custom hitnormal isn't being overriden.")
                     .WithCause("A hitnormal file is present, but it's not overwriting the default hitnormal.")
                 }
             };
@@ -55,16 +55,26 @@ namespace ManiaChecks
 
         public override IEnumerable<Issue> GetIssues(BeatmapSet beatmapSet)
         {
-            List<string> hsList = beatmapSet.hitSoundFiles;
-            if (hsList.Count == 0) 
+            // No hitnormal sample found in beatmapSet's folder
+            List<string> hitnormalList = getHitNormalSamples(beatmapSet.hitSoundFiles).ToList();
+            if (hitnormalList.Count() == 0)
                 foreach (Beatmap beatmap in beatmapSet.beatmaps)
                     yield return new Issue(GetTemplate("HitnormalFile"), beatmap);
 
+            // A hitnormal has been found. Check whether it is overriding it.
             else 
             foreach (Beatmap beatmap in beatmapSet.beatmaps)
-                foreach (var hitObject in beatmap.hitObjects)
-                    if (hitObject.filename == null && !hasHitNormal(hsList))
-                        yield return new Issue(GetTemplate("HitnormalOverride"), beatmap, Timestamp.Get(hitObject));
+                foreach (var timingLine in beatmap.timingLines)
+                {
+                    if (timingLine.sampleset == Beatmap.Sampleset.Auto)
+                        yield return new Issue(GetTemplate("HitnormalOverride"), beatmap);
+
+                    string customIndex = timingLine.customIndex == 1 ? "" : timingLine.customIndex.ToString();
+                    string sample = timingLine.sampleset.ToString().ToLower() + "-hitnormal" + customIndex;
+
+                    if (!isHitNormalInList(sample, hitnormalList))
+                        yield return new Issue(GetTemplate("HitnormalOverride"), beatmap);
+                }
         }
     }
 }

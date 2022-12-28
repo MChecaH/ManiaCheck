@@ -17,12 +17,30 @@ namespace ManiaChecks
         }
 
         /// <summary> Checks whether the Hitsound list of a Beatmapset has any acceptable hitnormal sample </summary>
-        public static bool hasHitNormal(List<string> hsList)
+        public static bool hasHitNormal(string hitsound)
         {
-            foreach (var HS in hsList) 
-                if (Regex.IsMatch(HS, WildCardToRegular("*-hitnormal*")))
-                    return true;
-            return false;
+            if (Regex.IsMatch(hitsound, WildCardToRegular("*-hitnormal*")))
+                return true;
+            else return false;
+        }
+
+        /// <summary> Checks whether a specific sample is found in the hitNormal list </summary>
+        public static bool isHitNormalInList(string sample, List<string> hitNormalList)
+        {
+            bool isInList = false;
+            foreach (var hitNormal in hitNormalList)
+                if (Regex.IsMatch(hitNormal, WildCardToRegular("*" + sample + "*")))
+                    isInList = true;
+
+            return isInList;
+        }
+
+        /// <summary> Returns a list of all hitnormal files used </summary>
+        public static IEnumerable<string> getHitNormalSamples(List<string> hitSoundList)
+        {
+            foreach (var hitSound in hitSoundList)
+                if (hasHitNormal(hitSound))
+                    yield return hitSound;
         }
 
         /// <summary> Updated difficulty dictionary for Mania </summary>
