@@ -52,7 +52,7 @@ namespace ManiaChecks
             {
                 { "Concurrent Objects",
                     new IssueTemplate(Issue.Level.Problem,
-                        "{0} Concurrent {1}.",
+                        "MANIA ONLY - {0} Concurrent {1}.",
                         "timestamp - ", "hit objects")
                     .WithCause(
                         "A hit object starts before another hit object has ended. For mania this also " +
@@ -60,7 +60,7 @@ namespace ManiaChecks
 
                 { "Almost Concurrent Objects",
                     new IssueTemplate(Issue.Level.Warning,
-                        "{0} Within {1} ms of one another.",
+                        "MANIA ONLY - {0} Within {1} ms of one another.",
                         "timestamp - ", "gap")
                     .WithCause(
                         "Two hit objects are less than 10 ms apart from one another.For mania this also " +
@@ -80,6 +80,8 @@ namespace ManiaChecks
                 {
                     var otherHitObject = beatmap.hitObjects[j];  // Next object to check, relative to "hitObject"
 
+                    if (hitObject.Position.X == otherHitObject.Position.X) break;
+
                     int hitObjectColumn = getColumn(hitObject, keys);
                     int otherHitObjectColumn = getColumn(otherHitObject, keys);
 
@@ -91,7 +93,7 @@ namespace ManiaChecks
                     {
                         var timestamp = Timestamp.Get(hitObject);
                         var otherTimestamp = Timestamp.Get(otherHitObject);
-                        if (msApart == 0)
+                        if (msApart <= 0)
                             yield return new Issue(GetTemplate("Concurrent Objects"), beatmap,
                                 timestamp.Substring(0, timestamp.IndexOf(" ")), ObjectsAsString(hitObject, otherHitObject));
 

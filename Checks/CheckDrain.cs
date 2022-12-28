@@ -14,6 +14,7 @@ namespace ManiaChecks
     {
         public override CheckMetadata GetMetadata() => new BeatmapCheckMetadata
         {
+            Modes = new Beatmap.Mode[] { Beatmap.Mode.Mania },
             Category = "Compose",
             Message = "Too short drain time.",
             Author = "Naxess",
@@ -43,8 +44,8 @@ namespace ManiaChecks
             return new Dictionary<string, IssueTemplate>
             {
                 { "Problem",
-                    new IssueTemplate(Issue.Level.Problem,
-                        "Less than 30 seconds of cock, currently {0}.",
+                    new IssueTemplate(Issue.Level.Info,
+                        "MANIA ONLY - Less than 30 seconds of Drain Time, currently {0}.",
                         "drain time")
                     .WithCause(
                         "The time from the first object to the end of the last object, subtracting any time between two objects " +
@@ -70,9 +71,9 @@ namespace ManiaChecks
                 drainTime = endTime - startTime - breakReduction;
             }
 
-            if (drainTime > 30 * 1000)
+            if (drainTime < 30 * 1000)
                 yield return new Issue(GetTemplate("Problem"), beatmap,
-                    drainTime);
+                    Timestamp.Get(drainTime));
         }
     }
 }
