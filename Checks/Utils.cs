@@ -20,7 +20,7 @@ namespace ManiaChecks
         public static bool hasHitNormal(List<string> hsList)
         {
             foreach (var HS in hsList) 
-                if (Regex.IsMatch(HS, WildCardToRegular("*-hitnormal.*")))
+                if (Regex.IsMatch(HS, WildCardToRegular("*-hitnormal*")))
                     return true;
             return false;
         }
