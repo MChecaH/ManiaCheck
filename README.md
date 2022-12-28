@@ -14,6 +14,7 @@ ManiaCheck is an osu!mania plugin for [Naxess' Mapset verifier](https://github.c
 | Resources | Missing hitnormal           |
 | ~~Timing~~    | ~~Unnormalized SVs in EZ/NM~~   |
 | Compose   | Stacked notes               |
+| Compose   | Drain Time too short (<30s) |
 
 ### Minor/Unreliable checks (Warnings)
 
