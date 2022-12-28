@@ -1,4 +1,4 @@
-﻿using MapsetVerifierFramework;
+using MapsetVerifierFramework;
 using System.Globalization;
 
 namespace ManiaChecks
@@ -12,7 +12,10 @@ namespace ManiaChecks
             CheckerRegistry.RegisterCheck(new CheckSeven());
             CheckerRegistry.RegisterCheck(new checkHN());
             CheckerRegistry.RegisterCheck(new CheckHSDiff());
-            CheckerRegistry.RegisterCheck(new CheckEzSv());
+            //CheckerRegistry.RegisterCheck(new CheckEzSv()); Broken Base BPM calc
+            //CheckerRegistry.RegisterCheck(new CheckVarBPM()); Broken Base BPM calc
+            CheckerRegistry.RegisterCheck(new CheckConcurrent());
+            //CheckerRegistry.RegisterCheck(new CheckDrainTime()); Being checked by Naxess
         }
     }
 }

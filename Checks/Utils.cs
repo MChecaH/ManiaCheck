@@ -46,43 +46,71 @@ namespace ManiaChecks
             return Beatmap.Difficulty.Ultra;     
         }
 
-        /// <summary> Function that replicates osu!'s algorithm to determine a map's common beat length (Not BPM!). More info in https://github.com/ppy/osu/blob/3e5d29ed007277014eec19a65e4958508d7d8bb3/osu.Game/Beatmaps/Beatmap.cs#L83. This is also partly based of a Python script made to remove SVs in a beatmap. Don't ask, they generally suck anyways. </summary>
+        /*
         public static double GetMostCommonBeatLength(Beatmap beatmap)
         {
-            // We first get the last playable time in a beatmap with this. Returns 0 if no objects are present.
+            var timingLines = beatmap.timingLines;
+
             double lastTime = 0;
             if (beatmap.hitObjects.Count == 0)
                 return lastTime;
             else 
                 lastTime = beatmap.hitObjects.Last().GetEndTime();
 
-            // To make things easier, I've parsed only the timing points we'll use (RedLines // Uninherited). 
-            // We'll unwrap it into a (offset, beatLength) map. MP doesn't have a Constructor for it.
-            Dictionary<double, double> timingLineMap = new Dictionary<double, double>();
-            foreach (var timingLine in beatmap.timingLines.OfType<UninheritedLine>().ToList())
+            var durationList = new Dictionary<double, double>();
+            foreach (UninheritedLine timingLine in timingLines.OfType<UninheritedLine>().ToList())
             {
-                timingLineMap[timingLine.offset] = timingLine.msPerBeat; 
+                if (timingLine.Prev() != null)
+                {
+                    var prevTimingLine = (UninheritedLine) timingLine.Prev();
+                    double prevBeatLength = prevTimingLine.msPerBeat;
+                    double currentBeatLength = timingLine.msPerBeat;
+                    if (!durationList.ContainsKey(prevBeatLength))
+                        durationList[prevBeatLength] = Math.Abs(prevBeatLength - currentBeatLength);
+                    else durationList[prevBeatLength] += Math.Abs(prevBeatLength - currentBeatLength);
+                }
             }
 
-            // We add the last time under the assumption it has the same BPM as the last timing point.
-            var lastOffset = timingLineMap.Keys.Last();
-            timingLineMap[lastTime] = timingLineMap[lastOffset];
+            var lastLine = (UninheritedLine) timingLines.OfType<UninheritedLine>().Last();
+            var lastBPM = lastLine.msPerBeat;
+            durationList[lastBPM] += Math.Abs(durationList[lastBPM] - lastTime);
 
-            // Then, we create a Dictionary of tuples with (beatLength, totalDuration)
-            Dictionary<double, double> durationList = new Dictionary<double, double>();
-            KeyValuePair<double, double> prevTimingLine = timingLineMap.First();
-            foreach (KeyValuePair<double, double> timingLine in timingLineMap.Skip(1))
-            {
-                var offsetDelta = timingLine.Key - prevTimingLine.Key;
-                if (!timingLineMap.ContainsKey(timingLine.Value))
-                    durationList[timingLine.Value] = offsetDelta;
-                else durationList[timingLine.Value] += offsetDelta;
-                prevTimingLine = timingLine;
-            }
-
-            // Finally, we order the Dictionary in descending value fashion and return the key value of the first element.
             durationList.OrderByDescending(key => key.Value);
             return durationList.Keys.First();
+        }
+        */
+
+        /// <summary> "osu!" calc to get the base BPM of a beatmap. All credits go to the original devs. For consistency sake, we'll be using their algorithm. Original method github.com/Naxesss/MapsetParser/blob/master/objects/TimingLine.cs </summary>
+        public static double GetMostCommonBeatLength(Beatmap beatmap)
+        {
+            // The last playable time in the beatmap - the last timing point extends to this time.
+            // Note: This is more accurate and may present different results because osu-stable didn't have the ability to calculate slider durations in this context.
+            double lastTime = beatmap.hitObjects.LastOrDefault()?.GetEndTime() ?? beatmap.timingLines.LastOrDefault()?.offset ?? 0;
+
+            // TimingLine -> UninheritedLine cast conversion to fetch "beatLength" values
+            List<UninheritedLine> uninheritedLines = beatmap.timingLines.OfType<UninheritedLine>().Cast<UninheritedLine>().ToList();
+
+            var mostCommon =
+                // Construct a set of (beatLength, duration) tuples for each individual timing point.
+                uninheritedLines.Select((t, i) =>
+                                {
+                                    if (t.offset > lastTime)
+                                        return (beatLength: t.msPerBeat, 0);
+
+                                    // osu-stable forced the first control point to start at 0.
+                                    // This is reproduced here to maintain compatibility around osu!mania scroll speed and song select display.
+                                    double currentTime = i == 0 ? 0 : t.offset;
+                                    double nextTime = i == beatmap.timingLines.Count - 1 ? lastTime : beatmap.timingLines[i + 1].offset;
+
+                                    return (beatLength: t.msPerBeat, duration: nextTime - currentTime);
+                                })
+                                // Aggregate durations into a set of (beatLength, duration) tuples for each beat length
+                                .GroupBy(t => Math.Round(t.beatLength * 1000) / 1000)
+                                .Select(g => (beatLength: g.Key, duration: g.Sum(t => t.duration)))
+                                // Get the most common one, or 0 as a suitable default
+                                .OrderByDescending(i => i.duration).FirstOrDefault();
+
+            return mostCommon.beatLength;
         }
 
         /// <summary> I love working with BeatLength. Converts "beatLength" to "BPM" and viceversa. </summary>
