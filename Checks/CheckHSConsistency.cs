@@ -54,10 +54,10 @@ namespace ManiaChecks
 			// List of objects
 			List<List<(HitObject.HitSound, double)>> beatmapListHS = new List<List<(HitObject.HitSound, double)>>();
 			List<List<(string, double)>> beatmapListSI = new List<List<(string, double)>>();
-			List<Beatmap> beatmps = new List<Beatmap>();
+			List<Beatmap> beatmapsList = new List<Beatmap>();
 			foreach (Beatmap beatmap in beatmapSet.beatmaps)
 			{
-				beatmps.Add(beatmap);
+				beatmapsList.Add(beatmap);
 				List<(HitObject.HitSound, double)> hitsoundList = new List<(HitObject.HitSound, double)>();
 				List<(string, double)> sampleList = new List<(string, double)>();
 				foreach (var hitObject in beatmap.hitObjects)
@@ -95,13 +95,13 @@ namespace ManiaChecks
 				beatmapListSI.Add(sampleList);
 			}
 			// Checks if a hitsound could be placed on another difficulty
-			for (int i = 0; i < beatmapListHS.Count - 1; i++)
+			for (int i = 0; i < beatmapListHS.Count; i++)
 			{
 				for (int j = 0; j < beatmapListHS.Count; j++)
 				{
 					if (j == i)
 					{
-						j++;
+						continue;
 					}
 					foreach ((HitObject.HitSound, double) T1 in beatmapListHS[i])
 					{
@@ -123,7 +123,7 @@ namespace ManiaChecks
 								{
 									if (hasNote)
 									{
-										yield return new Issue(GetTemplate("Warning"), beatmps[i], Timestamp.Get(T1.Item2), beatmps[j]);
+										yield return new Issue(GetTemplate("Warning"), beatmapsList[i], Timestamp.Get(T1.Item2), beatmapsList[j]);
 									}
 									break;
 								}
@@ -133,13 +133,13 @@ namespace ManiaChecks
 				}
 			}
             // Checks if a import sample could be placed on another difficulty
-            for (int i = 0; i < beatmapListSI.Count - 1; i++)
+            for (int i = 0; i < beatmapListSI.Count; i++)
             {
                 for (int j = 0; j < beatmapListSI.Count; j++)
                 {
                     if (j == i)
                     {
-                        j++;
+                        continue;
                     }
                     foreach ((string, double) T1 in beatmapListSI[i])
 					{
@@ -161,7 +161,7 @@ namespace ManiaChecks
                                 {
                                     if (hasNote)
                                     {
-                                        yield return new Issue(GetTemplate("Warning"), beatmps[i], Timestamp.Get(T1.Item2), beatmps[j]);
+                                        yield return new Issue(GetTemplate("Warning"), beatmapsList[i], Timestamp.Get(T1.Item2), beatmapsList[j]);
                                     }
                                     break;
                                 }
