@@ -15,7 +15,7 @@ namespace ManiaChecks
         {
             Modes = new Beatmap.Mode[] { Beatmap.Mode.Mania },
             Category = "Hit Sound",
-            Message = "Contains Storyboard Hitsounds",
+            Message = "Contains storyboard hitsounds",
             Author = "Tailsdk & Naxess",
 
             Documentation = new Dictionary<string, string>
@@ -39,7 +39,7 @@ namespace ManiaChecks
             {
                 { "Warning",
                     new IssueTemplate(Issue.Level.Warning,
-                        "MANIA ONLY - {0} has a storyboard hitsound make sure that this is intentional.",
+                        "{0} has a storyboard hitsound make sure that this is intentional.",
                         "timestamp")
                     .WithCause(
                         "There is a storyboard hitsound present") }

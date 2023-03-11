@@ -17,6 +17,7 @@ namespace ManiaChecks
             CheckerRegistry.RegisterCheck(new CheckConcurrent());
             CheckerRegistry.RegisterCheck(new CheckDrainTime());
             CheckerRegistry.RegisterCheck(new CheckSBHS());
+            CheckerRegistry.RegisterCheck(new CheckHSCons());
         }
     }
 }
