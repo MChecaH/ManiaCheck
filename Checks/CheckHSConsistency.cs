@@ -52,40 +52,40 @@ namespace ManiaChecks
 		public override IEnumerable<Issue> GetIssues(BeatmapSet beatmapSet)
 		{
 			// List of objects
-			List<List<(HitObject.HitSound, double)>> beatmapListHS = new List<List<(HitObject.HitSound, double)>>();
+			List<List<(HitObject.HitSound, double, string)>> beatmapListHS = new List<List<(HitObject.HitSound, double, string)>>();
 			List<List<(string, double, HitObject.HitSound)>> beatmapListSI = new List<List<(string, double, HitObject.HitSound)>>();
 			List<Beatmap> beatmapsList = new List<Beatmap>();
 			foreach (Beatmap beatmap in beatmapSet.beatmaps)
 			{
 				beatmapsList.Add(beatmap);
-				List<(HitObject.HitSound, double)> hitsoundList = new List<(HitObject.HitSound, double)>();
+				List<(HitObject.HitSound, double, string)> hitsoundList = new List<(HitObject.HitSound, double, string)>();
 				List<(string, double, HitObject.HitSound)> sampleList = new List<(string, double, HitObject.HitSound)>();
 				foreach (var hitObject in beatmap.hitObjects)
 				{
 					// Adds the various hitsounds to the hitsound list
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.Clap))
 					{
-						(HitObject.HitSound, double) hitsound = (HitObject.HitSound.Clap, hitObject.time);
+						(HitObject.HitSound, double, string) hitsound = (HitObject.HitSound.Clap, hitObject.time, hitObject.filename);
 						hitsoundList.Add(hitsound);
 					}
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.Normal))
 					{
-						(HitObject.HitSound, double) hitsound = (HitObject.HitSound.Normal, hitObject.time);
+						(HitObject.HitSound, double, string) hitsound = (HitObject.HitSound.Normal, hitObject.time, hitObject.filename);
 						hitsoundList.Add(hitsound);
 					}
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.None))
 					{
-						(HitObject.HitSound, double) hitsound = (HitObject.HitSound.None, hitObject.time);
+						(HitObject.HitSound, double, string) hitsound = (HitObject.HitSound.None, hitObject.time, hitObject.filename);
 						hitsoundList.Add(hitsound);
 					}
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.Whistle))
 					{
-						(HitObject.HitSound, double) hitsound = (HitObject.HitSound.Whistle, hitObject.time);
+						(HitObject.HitSound, double, string) hitsound = (HitObject.HitSound.Whistle, hitObject.time, hitObject.filename);
 						hitsoundList.Add(hitsound);
 					}
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.Finish))
 					{
-						(HitObject.HitSound, double) hitsound = (HitObject.HitSound.Finish, hitObject.time);
+						(HitObject.HitSound, double, string) hitsound = (HitObject.HitSound.Finish, hitObject.time, hitObject.filename);
 						hitsoundList.Add(hitsound);
 					}
 					// Adds samples to the sample list
@@ -103,19 +103,19 @@ namespace ManiaChecks
 					{
 						continue;
 					}
-					foreach ((HitObject.HitSound, double) T1 in beatmapListHS[i])
+					foreach ((HitObject.HitSound, double, string) T1 in beatmapListHS[i])
 					{
 						if (T1.Item1 != HitObject.HitSound.Normal)
 						{
 							bool hasNote = false;
-							foreach ((HitObject.HitSound, double) T2 in beatmapListHS[j])
+							foreach ((HitObject.HitSound, double, string) T2 in beatmapListHS[j])
 							{
 
 								if (T1.Item2 == T2.Item2 && T1.Item1 == T2.Item1)
 								{
 									break;
 								}
-								else if (T1.Item2 == T2.Item2)
+								else if (T1.Item2 == T2.Item2 && T2.Item3 == null)
 								{
 									hasNote = true;
 								}
