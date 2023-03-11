@@ -53,13 +53,13 @@ namespace ManiaChecks
 		{
 			// List of objects
 			List<List<(HitObject.HitSound, double)>> beatmapListHS = new List<List<(HitObject.HitSound, double)>>();
-			List<List<(string, double)>> beatmapListSI = new List<List<(string, double)>>();
+			List<List<(string, double, HitObject.HitSound)>> beatmapListSI = new List<List<(string, double, HitObject.HitSound)>>();
 			List<Beatmap> beatmapsList = new List<Beatmap>();
 			foreach (Beatmap beatmap in beatmapSet.beatmaps)
 			{
 				beatmapsList.Add(beatmap);
 				List<(HitObject.HitSound, double)> hitsoundList = new List<(HitObject.HitSound, double)>();
-				List<(string, double)> sampleList = new List<(string, double)>();
+				List<(string, double, HitObject.HitSound)> sampleList = new List<(string, double, HitObject.HitSound)>();
 				foreach (var hitObject in beatmap.hitObjects)
 				{
 					// Adds the various hitsounds to the hitsound list
@@ -89,7 +89,7 @@ namespace ManiaChecks
 						hitsoundList.Add(hitsound);
 					}
 					// Adds samples to the sample list
-					sampleList.Add((hitObject.filename, hitObject.time));
+					sampleList.Add((hitObject.filename, hitObject.time, hitObject.hitSound));
 				}
 				beatmapListHS.Add(hitsoundList);
 				beatmapListSI.Add(sampleList);
@@ -141,19 +141,19 @@ namespace ManiaChecks
                     {
                         continue;
                     }
-                    foreach ((string, double) T1 in beatmapListSI[i])
+                    foreach ((string, double, HitObject.HitSound) T1 in beatmapListSI[i])
 					{
 						if (T1.Item1 != null)
 						{
                             bool hasNote = false;
-                            foreach ((string, double) T2 in beatmapListSI[j])
+                            foreach ((string, double, HitObject.HitSound) T2 in beatmapListSI[j])
                             {
 
                                 if (T1.Item2 == T2.Item2 && T1.Item1 == T2.Item1)
                                 {
                                     break;
                                 }
-                                else if (T1.Item2 == T2.Item2 && T2.Item1 == null)
+                                else if (T1.Item2 == T2.Item2 && T2.Item1 == null && (T2.Item3 == HitObject.HitSound.Normal || T2.Item3 == HitObject.HitSound.None) )
                                 {
                                     hasNote = true;
                                 }
