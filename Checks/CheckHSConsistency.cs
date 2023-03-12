@@ -65,27 +65,27 @@ namespace ManiaChecks
 					// Adds the various hitsounds to the hitsound list
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.Clap))
 					{
-						(HitObject.HitSound, double, string) hitsound = (HitObject.HitSound.Clap, hitObject.time, hitObject.filename);
+						(HitObject.HitSound, double, string) hitsound = ( (hitObject.filename == null)? HitObject.HitSound.Clap : HitObject.HitSound.Normal, hitObject.time, hitObject.filename);
 						hitsoundList.Add(hitsound);
-					}
+					} 
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.Normal))
-					{
+					{      
 						(HitObject.HitSound, double, string) hitsound = (HitObject.HitSound.Normal, hitObject.time, hitObject.filename);
 						hitsoundList.Add(hitsound);
 					}
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.None))
 					{
-						(HitObject.HitSound, double, string) hitsound = (HitObject.HitSound.None, hitObject.time, hitObject.filename);
+						(HitObject.HitSound, double, string) hitsound = ((hitObject.filename == null) ? HitObject.HitSound.None : HitObject.HitSound.Normal, hitObject.time, hitObject.filename);
 						hitsoundList.Add(hitsound);
 					}
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.Whistle))
 					{
-						(HitObject.HitSound, double, string) hitsound = (HitObject.HitSound.Whistle, hitObject.time, hitObject.filename);
+						(HitObject.HitSound, double, string) hitsound = ((hitObject.filename == null) ? HitObject.HitSound.Whistle : HitObject.HitSound.Normal, hitObject.time, hitObject.filename);
 						hitsoundList.Add(hitsound);
 					}
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.Finish))
 					{
-						(HitObject.HitSound, double, string) hitsound = (HitObject.HitSound.Finish, hitObject.time, hitObject.filename);
+						(HitObject.HitSound, double, string) hitsound = ((hitObject.filename == null) ? HitObject.HitSound.Finish : HitObject.HitSound.Normal, hitObject.time, hitObject.filename);
 						hitsoundList.Add(hitsound);
 					}
 					// Adds samples to the sample list
