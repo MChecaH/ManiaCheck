@@ -145,7 +145,7 @@ namespace ManiaChecks
 								{
 									break;
 								}
-								else if (T1.Item2 == T2.Item2 && T2.Item3 == null)
+								else if (T1.Item2 == T2.Item2 && T2.Item3 == null && T1.Item4 == T2.Item4)
 								{
 									hasNote = true;
 								}
@@ -165,7 +165,6 @@ namespace ManiaChecks
             // Checks if a import sample could be placed on another difficulty
             for (int i = 0; i < beatmapListSI.Count; i++)
             {
-                bool check = false;
                 for (int j = 0; j < beatmapListSI.Count; j++)
                 {
                     if (j == i)
@@ -204,7 +203,6 @@ namespace ManiaChecks
                             }
                         }
 					}
-                    check = true;
                 }
 			}
 		}
