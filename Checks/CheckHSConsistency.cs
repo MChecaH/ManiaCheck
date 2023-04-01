@@ -52,10 +52,10 @@ namespace ManiaChecks
 
                 { "Problem",
                     new IssueTemplate(Issue.Level.Problem,
-                        "{0} the hitsound does not exist.",
-                        "timestamp")
+                        "{0} is used but does not exist.",
+                        "hitsound")
                     .WithCause(
-                        "There is a missing hitsound") }
+                        "Missing hitsound") }
             };
 		}
 
@@ -66,6 +66,8 @@ namespace ManiaChecks
 			List<List<(string, double, HitObject.HitSound)>> beatmapListSI = new List<List<(string, double, HitObject.HitSound)>>();
 			List<Beatmap> beatmapsList = new List<Beatmap>();
 			List<string> filesList = beatmapSet.hitSoundFiles;
+			List<(HitObject.HitSound, Sampleset, string)> checkedHS = new List<(HitObject.HitSound, Sampleset, string)>();
+            List<string> checkedSI = new List<string>();
             foreach (Beatmap beatmap in beatmapSet.beatmaps)
 			{
 				beatmapsList.Add(beatmap);
@@ -120,7 +122,6 @@ namespace ManiaChecks
 			// Checks if a hitsound could be placed on another difficulty
 			for (int i = 0; i < beatmapListHS.Count; i++)
 			{
-				bool check = false;
 				for (int j = 0; j < beatmapListHS.Count; j++)
 				{
 					if (j == i)
@@ -129,11 +130,12 @@ namespace ManiaChecks
 					}
 					foreach ((HitObject.HitSound, double, string, Sampleset, string) T1 in beatmapListHS[i])
 					{
-						if (T1.Item1 != HitObject.HitSound.Normal && T1.Item1 != HitObject.HitSound.None)
+						if (T1.Item1 != HitObject.HitSound.None)
 						{
-                            if (!check && !isHitNormalInList(	(T1.Item4.ToString().ToLower() + "-hit" + T1.Item1.ToString().ToLower() + T1.Item5.ToString()), filesList))
+                            if (T1.Item5 != "0" && !checkedHS.Contains((T1.Item1, T1.Item4, T1.Item5)) && !isHitNormalInList((T1.Item4.ToString().ToLower() + "-hit" + T1.Item1.ToString().ToLower() + T1.Item5.ToString()), filesList))
                             {
-                                yield return new Issue(GetTemplate("Problem"), beatmapsList[i], Timestamp.Get(T1.Item2));
+                                yield return new Issue(GetTemplate("Problem"), beatmapsList[i], T1.Item4.ToString().ToLower() + "-hit" + T1.Item1.ToString().ToLower() + T1.Item5.ToString() + ".wav/ogg");
+								checkedHS.Add((T1.Item1, T1.Item4, T1.Item5));
                             }
                             bool hasNote = false;
 							foreach ((HitObject.HitSound, double, string, Sampleset, string) T2 in beatmapListHS[j])
@@ -158,7 +160,6 @@ namespace ManiaChecks
 							}
 						}
 					}
-					check = true;
 				}
 			}
             // Checks if a import sample could be placed on another difficulty
@@ -175,9 +176,10 @@ namespace ManiaChecks
 					{
 						if (T1.Item1 != null)
 						{
-							if (!check && !filesList.Contains(T1.Item1))
+							if (!checkedSI.Contains(T1.Item1) && !filesList.Contains(T1.Item1))
 							{
-                                yield return new Issue(GetTemplate("Problem"), beatmapsList[i], Timestamp.Get(T1.Item2));
+                                yield return new Issue(GetTemplate("Problem"), beatmapsList[i], T1.Item1 + ".wav/ogg");
+								checkedSI.Add(T1.Item1);
                             }
                             bool hasNote = false;
                             foreach ((string, double, HitObject.HitSound) T2 in beatmapListSI[j])
