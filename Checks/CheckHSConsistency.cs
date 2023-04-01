@@ -90,27 +90,27 @@ namespace ManiaChecks
 					// Adds the various hitsounds to the hitsound list
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.Clap))
 					{
-						(HitObject.HitSound, double, string, Sampleset, string) hitsound = ( (hitObject.filename == null)? HitObject.HitSound.Clap : HitObject.HitSound.Normal, hitObject.time, hitObject.filename, (hitObject.sampleset == Sampleset.Auto)?  samplesetList[index].Item2 : hitObject.sampleset, (samplesetList[index].Item3 == "1")? "" : samplesetList[index].Item3);
+						(HitObject.HitSound, double, string, Sampleset, string) hitsound = ( (hitObject.filename == null)? HitObject.HitSound.Clap : HitObject.HitSound.None, hitObject.time, hitObject.filename, (hitObject.sampleset == Sampleset.Auto)?  samplesetList[index].Item2 : hitObject.sampleset, (samplesetList[index].Item3 == "1")? "" : samplesetList[index].Item3);
 						hitsoundList.Add(hitsound);
 					} 
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.Normal))
 					{      
-						(HitObject.HitSound, double, string, Sampleset, string) hitsound = (HitObject.HitSound.Normal, hitObject.time, hitObject.filename, (hitObject.sampleset == Sampleset.Auto) ? samplesetList[index].Item2 : hitObject.sampleset, (samplesetList[index].Item3 == "1") ? "" : samplesetList[index].Item3);
+						(HitObject.HitSound, double, string, Sampleset, string) hitsound = ((hitObject.filename == null) ? HitObject.HitSound.Normal : HitObject.HitSound.None, hitObject.time, hitObject.filename, (hitObject.sampleset == Sampleset.Auto) ? samplesetList[index].Item2 : hitObject.sampleset, (samplesetList[index].Item3 == "1") ? "" : samplesetList[index].Item3);
 						hitsoundList.Add(hitsound);
 					}
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.None))
 					{
-						(HitObject.HitSound, double, string, Sampleset, string) hitsound = ((hitObject.filename == null) ? HitObject.HitSound.None : HitObject.HitSound.Normal, hitObject.time, hitObject.filename, (hitObject.sampleset == Sampleset.Auto) ? samplesetList[index].Item2 : hitObject.sampleset, (samplesetList[index].Item3 == "1") ? "" : samplesetList[index].Item3);
+						(HitObject.HitSound, double, string, Sampleset, string) hitsound = (HitObject.HitSound.None, hitObject.time, hitObject.filename, (hitObject.sampleset == Sampleset.Auto) ? samplesetList[index].Item2 : hitObject.sampleset, (samplesetList[index].Item3 == "1") ? "" : samplesetList[index].Item3);
 						hitsoundList.Add(hitsound);
 					}
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.Whistle))
 					{
-						(HitObject.HitSound, double, string, Sampleset, string) hitsound = ((hitObject.filename == null) ? HitObject.HitSound.Whistle : HitObject.HitSound.Normal, hitObject.time, hitObject.filename, (hitObject.sampleset == Sampleset.Auto) ? samplesetList[index].Item2 : hitObject.sampleset, (samplesetList[index].Item3 == "1") ? "" : samplesetList[index].Item3);
+						(HitObject.HitSound, double, string, Sampleset, string) hitsound = ((hitObject.filename == null) ? HitObject.HitSound.Whistle : HitObject.HitSound.None, hitObject.time, hitObject.filename, (hitObject.sampleset == Sampleset.Auto) ? samplesetList[index].Item2 : hitObject.sampleset, (samplesetList[index].Item3 == "1") ? "" : samplesetList[index].Item3);
 						hitsoundList.Add(hitsound);
 					}
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.Finish))
 					{
-						(HitObject.HitSound, double, string, Sampleset, string) hitsound = ((hitObject.filename == null) ? HitObject.HitSound.Finish : HitObject.HitSound.Normal, hitObject.time, hitObject.filename, (hitObject.sampleset == Sampleset.Auto) ? samplesetList[index].Item2 : hitObject.sampleset, (samplesetList[index].Item3 == "1") ? "" : samplesetList[index].Item3);
+						(HitObject.HitSound, double, string, Sampleset, string) hitsound = ((hitObject.filename == null) ? HitObject.HitSound.Finish : HitObject.HitSound.None, hitObject.time, hitObject.filename, (hitObject.sampleset == Sampleset.Auto) ? samplesetList[index].Item2 : hitObject.sampleset, (samplesetList[index].Item3 == "1") ? "" : samplesetList[index].Item3);
 						hitsoundList.Add(hitsound);
 					}
 					// Adds samples to the sample list
