@@ -40,7 +40,7 @@ namespace ManiaChecks
             {
                 {
                 "HitnormalFile",
-                    new IssueTemplate(Issue.Level.Problem,
+                    new IssueTemplate(Issue.Level.Warning,
                         "No hitnormal sample found in beatmap folder")
                     .WithCause("Cannot find a hitnormal sample in the beatmap folder.")
                 },
