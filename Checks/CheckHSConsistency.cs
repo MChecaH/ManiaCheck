@@ -55,34 +55,62 @@ namespace ManiaChecks
                         "{0} is used but does not exist.",
                         "hitsound")
                     .WithCause(
-                        "Missing hitsound") }
+                        "Missing hitsound") },
+                { "Double Hitsound",
+                    new IssueTemplate(Issue.Level.Warning,
+                        "{0} you have 2 of the same samples here make sure this is intentional {1}",
+                        "timestamp", "hitsound")
+                    .WithCause(
+                        "Double hitsound") },
             };
 		}
 
 		public override IEnumerable<Issue> GetIssues(BeatmapSet beatmapSet)
 		{
+			
 			// List of objects
 			List<List<(HitObject.HitSound, double, string, Sampleset, string)>> beatmapListHS = new List<List<(HitObject.HitSound, double, string, Sampleset, string)>>();
 			List<List<(string, double, HitObject.HitSound)>> beatmapListSI = new List<List<(string, double, HitObject.HitSound)>>();
-			List<Beatmap> beatmapsList = new List<Beatmap>();
-			List<string> filesList = beatmapSet.hitSoundFiles;
+			List<int> beatmapsList = new List<int>();
+			List<string> filesList = new List<string>();
+            foreach (var s in beatmapSet.hitSoundFiles)
+            {
+                filesList.Add(s.ToLower());
+            }
 			List<(HitObject.HitSound, Sampleset, string)> checkedHS = new List<(HitObject.HitSound, Sampleset, string)>();
             List<string> checkedSI = new List<string>();
-            foreach (Beatmap beatmap in beatmapSet.beatmaps)
+            foreach (var item in beatmapSet.beatmaps.Select((beatmap, i) => new { i, beatmap }))
 			{
-				beatmapsList.Add(beatmap);
+				if (beatmapsList.Count > 4)
+				{
+					continue;
+				}
+				beatmapsList.Add(item.i);
+				if(item.beatmap.generalSettings.mode != Mode.Mania)
+				{
+					continue;
+				}
 				List<(HitObject.HitSound, double, string, Sampleset, string)> hitsoundList = new List<(HitObject.HitSound, double, string, Sampleset, string)>();
 				List<(string, double, HitObject.HitSound)> sampleList = new List<(string, double, HitObject.HitSound)>();
 				List<(double, Sampleset, string)> samplesetList = new List<(double, Sampleset, string)>();
 				int index = 0;
 
-				foreach (var tL in beatmap.timingLines)
+				foreach (var tL in item.beatmap.timingLines)
 				{
 					samplesetList.Add((tL.offset, tL.sampleset, tL.customIndex.ToString()));
 				}
                 samplesetList.Add((double.MaxValue, Sampleset.Normal, ""));
-                foreach (var hitObject in beatmap.hitObjects)
+                List<(HitObject.HitSound, string, Sampleset, string)> Added = new List<(HitObject.HitSound, string, Sampleset, string)>();
+                List<(string, HitObject.HitSound)> SampleAdded = new List<(string, HitObject.HitSound)>();
+                double tS = 0;
+                foreach (var hitObject in item.beatmap.hitObjects)
 				{
+					if (hitObject.time != tS) 
+					{
+						tS = hitObject.time;
+						Added.Clear();
+						SampleAdded.Clear();
+					}
 					while (samplesetList[index+1].Item1 <= hitObject.time)
 					{
 						index += 1;
@@ -91,31 +119,62 @@ namespace ManiaChecks
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.Clap))
 					{
 						(HitObject.HitSound, double, string, Sampleset, string) hitsound = ( (hitObject.filename == null)? HitObject.HitSound.Clap : HitObject.HitSound.None, hitObject.time, hitObject.filename, (hitObject.sampleset == Sampleset.Auto)?  samplesetList[index].Item2 : hitObject.sampleset, (samplesetList[index].Item3 == "1")? "" : samplesetList[index].Item3);
-						hitsoundList.Add(hitsound);
+						if (!Added.Contains((hitsound.Item1,hitsound.Item3,hitsound.Item4,hitsound.Item5)))
+						{
+                            hitsoundList.Add(hitsound);
+							Added.Add((hitsound.Item1, hitsound.Item3, hitsound.Item4, hitsound.Item5));
+                        }
+						else
+						{
+							yield return new Issue(GetTemplate("Double Hitsound"), item.beatmap, Timestamp.Get(hitObject.time), hitObject.hitSound);
+                        }
 					} 
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.Normal))
 					{      
 						(HitObject.HitSound, double, string, Sampleset, string) hitsound = ((hitObject.filename == null) ? HitObject.HitSound.Normal : HitObject.HitSound.None, hitObject.time, hitObject.filename, (hitObject.sampleset == Sampleset.Auto) ? samplesetList[index].Item2 : hitObject.sampleset, (samplesetList[index].Item3 == "1") ? "" : samplesetList[index].Item3);
-						hitsoundList.Add(hitsound);
-					}
+                        if (!Added.Contains((hitsound.Item1, hitsound.Item3, hitsound.Item4, hitsound.Item5)))
+                        {
+                            hitsoundList.Add(hitsound);
+                            Added.Add((hitsound.Item1, hitsound.Item3, hitsound.Item4, hitsound.Item5));
+                        }
+                    }
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.None))
 					{
 						(HitObject.HitSound, double, string, Sampleset, string) hitsound = (HitObject.HitSound.None, hitObject.time, hitObject.filename, (hitObject.sampleset == Sampleset.Auto) ? samplesetList[index].Item2 : hitObject.sampleset, (samplesetList[index].Item3 == "1") ? "" : samplesetList[index].Item3);
-						hitsoundList.Add(hitsound);
-					}
+                    }
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.Whistle))
 					{
 						(HitObject.HitSound, double, string, Sampleset, string) hitsound = ((hitObject.filename == null) ? HitObject.HitSound.Whistle : HitObject.HitSound.None, hitObject.time, hitObject.filename, (hitObject.sampleset == Sampleset.Auto) ? samplesetList[index].Item2 : hitObject.sampleset, (samplesetList[index].Item3 == "1") ? "" : samplesetList[index].Item3);
-						hitsoundList.Add(hitsound);
-					}
+                        if (!Added.Contains((hitsound.Item1, hitsound.Item3, hitsound.Item4, hitsound.Item5)))
+                        {
+                            hitsoundList.Add(hitsound);
+                            Added.Add((hitsound.Item1, hitsound.Item3, hitsound.Item4, hitsound.Item5));
+                        }
+                        else
+                        {
+                            yield return new Issue(GetTemplate("Double Hitsound"), item.beatmap, Timestamp.Get(hitObject.time), hitObject.hitSound);
+                        }
+                    }
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.Finish))
 					{
 						(HitObject.HitSound, double, string, Sampleset, string) hitsound = ((hitObject.filename == null) ? HitObject.HitSound.Finish : HitObject.HitSound.None, hitObject.time, hitObject.filename, (hitObject.sampleset == Sampleset.Auto) ? samplesetList[index].Item2 : hitObject.sampleset, (samplesetList[index].Item3 == "1") ? "" : samplesetList[index].Item3);
-						hitsoundList.Add(hitsound);
-					}
+                        if (!Added.Contains((hitsound.Item1, hitsound.Item3, hitsound.Item4, hitsound.Item5)))
+                        {
+                            hitsoundList.Add(hitsound);
+                            Added.Add((hitsound.Item1, hitsound.Item3, hitsound.Item4, hitsound.Item5));
+                        }
+                        else
+                        {
+                            yield return new Issue(GetTemplate("Double Hitsound"), item.beatmap, Timestamp.Get(hitObject.time), hitObject.hitSound);
+                        }
+                    }
 					// Adds samples to the sample list
-					sampleList.Add((hitObject.filename, hitObject.time, hitObject.hitSound));
-				}
+					if (!SampleAdded.Contains((hitObject.filename, hitObject.hitSound)))
+					{
+                        sampleList.Add((hitObject.filename, hitObject.time, hitObject.hitSound));
+						SampleAdded.Add((hitObject.filename, hitObject.hitSound));
+                    }
+                }
 				beatmapListHS.Add(hitsoundList);
 				beatmapListSI.Add(sampleList);
 			}
@@ -134,7 +193,7 @@ namespace ManiaChecks
 						{
                             if (T1.Item5 != "0" && !checkedHS.Contains((T1.Item1, T1.Item4, T1.Item5)) && !isHitNormalInList((T1.Item4.ToString().ToLower() + "-hit" + T1.Item1.ToString().ToLower() + T1.Item5.ToString()), filesList))
                             {
-                                yield return new Issue(GetTemplate("Problem"), beatmapsList[i], T1.Item4.ToString().ToLower() + "-hit" + T1.Item1.ToString().ToLower() + T1.Item5.ToString() + ".wav/ogg");
+                                yield return new Issue(GetTemplate("Problem"), beatmapSet.beatmaps[beatmapsList[i]], T1.Item4.ToString().ToLower() + "-hit" + T1.Item1.ToString().ToLower() + T1.Item5.ToString() + ".wav/ogg");
 								checkedHS.Add((T1.Item1, T1.Item4, T1.Item5));
                             }
                             bool hasNote = false;
@@ -153,7 +212,7 @@ namespace ManiaChecks
 								{
 									if (hasNote)
 									{
-										yield return new Issue(GetTemplate("Warning"), beatmapsList[i], Timestamp.Get(T1.Item2), beatmapsList[j]);
+										yield return new Issue(GetTemplate("Warning"), beatmapSet.beatmaps[beatmapsList[i]], Timestamp.Get(T1.Item2), beatmapSet.beatmaps[beatmapsList[j]]);
 									}
 									break;
 								}
@@ -175,10 +234,10 @@ namespace ManiaChecks
 					{
 						if (T1.Item1 != null)
 						{
-							if (!checkedSI.Contains(T1.Item1) && !filesList.Contains(T1.Item1))
+							if (!checkedSI.Contains(T1.Item1) && !filesList.Contains(T1.Item1.ToLower()))
 							{
-                                yield return new Issue(GetTemplate("Problem"), beatmapsList[i], T1.Item1 + ".wav/ogg");
-								checkedSI.Add(T1.Item1);
+                                yield return new Issue(GetTemplate("Problem"), beatmapSet.beatmaps[beatmapsList[i]], T1.Item1);
+                                checkedSI.Add(T1.Item1);
                             }
                             bool hasNote = false;
                             foreach ((string, double, HitObject.HitSound) T2 in beatmapListSI[j])
@@ -196,7 +255,7 @@ namespace ManiaChecks
                                 {
                                     if (hasNote)
                                     {
-                                        yield return new Issue(GetTemplate("Warning"), beatmapsList[i], Timestamp.Get(T1.Item2), beatmapsList[j]);
+                                        yield return new Issue(GetTemplate("Warning"), beatmapSet.beatmaps[beatmapsList[i]], Timestamp.Get(T1.Item2), beatmapSet.beatmaps[beatmapsList[j]]);
                                     }
                                     break;
                                 }
