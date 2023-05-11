@@ -81,10 +81,6 @@ namespace ManiaChecks
             List<string> checkedSI = new List<string>();
             foreach (var item in beatmapSet.beatmaps.Select((beatmap, i) => new { i, beatmap }))
 			{
-				if (beatmapsList.Count > 4)
-				{
-					continue;
-				}
 				beatmapsList.Add(item.i);
 				if(item.beatmap.generalSettings.mode != Mode.Mania)
 				{
