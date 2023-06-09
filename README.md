@@ -15,6 +15,7 @@ ManiaCheck is an osu!mania plugin for [Naxess' Mapset verifier](https://github.c
 | ~~Timing~~    | ~~Unnormalized SVs in EZ/NM~~   |
 | Compose   | Stacked notes               |
 | Compose   | Drain Time too short (<30s) |
+| Resources | Missing hitsound files |
 
 ### Minor/Unreliable checks (Warnings)
 
@@ -26,6 +27,8 @@ ManiaCheck is an osu!mania plugin for [Naxess' Mapset verifier](https://github.c
 | Files    | Hitsound difficulty in song folder |
 | Spread   | Chord size too high                |
 | Compose  | Almost Stacked notes               |
+| Compose  | Hitsound inconsistency between difficulties |
+| Compose  | Double hitsounds |
 
 
 ## Planned Checks
@@ -33,7 +36,6 @@ ManiaCheck is an osu!mania plugin for [Naxess' Mapset verifier](https://github.c
 - ~~Check that Easy difficulty doesn't have scroll changes~~
 - Check whether variable timing maps have scroll Normalisation
 - Check whether normalizing Green Lines are right on top of Red Lines
-- Complete hitsound checks (consistency between difficulties, duplicate hitsounds, etc.)
 - Check for **extremely** close together notes to avoid stuff like [this](https://cdn.discordapp.com/attachments/808360583669874688/996761548536156281/unknown.png).
 
 ## How to Install
@@ -49,5 +51,4 @@ ManiaCheck is an osu!mania plugin for [Naxess' Mapset verifier](https://github.c
 ## Reporting Bugs
 
 If you find something that doesn't feel right or want to make suggestions for potential checks, feel free to open a GitHub issue. You may also directly contact directly any of the project mantainers:
-- Randome (Discord: MartíCheca#0770 | osu!: [RandomeLoL](https://osu.ppy.sh/users/7080063)) 
-- Komi (Discord: Komirin#9568 | osu!: [Quenlla](https://web.whatsapp.com/)).
+- Tailsdk (Discord: tailsdk | osu!: [Tailsdk](https://osu.ppy.sh/users/6751666)) 
