@@ -41,10 +41,9 @@ ManiaCheck is an osu!mania plugin for [Naxess' Mapset verifier](https://github.c
 ## How to Install
 
 - Download the latest release of `ManiaChecks.dll`.
-- Open your `Roaming` folder, you can find it with either:
-  - Typing `%APPDATA%` in your file explorer's address bar.
-  - Navigate to the folder yourself `C:/Users/<YOURNAME>/AppData/Roaming`.
-- Open the `Mapset Verifier Externals` folder.
+- Click the settings icon in Mapset Verifier
+- Scroll to the button to the shortcuts
+- Click the `Open externals folder` icon
 - Open the `checks` folder.
 - Place the `ManiaChecks.dll` file in this folder.
 
