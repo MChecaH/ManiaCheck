@@ -19,7 +19,7 @@ namespace ManiaChecks
         /// <summary> Checks whether the Hitsound list of a Beatmapset has any acceptable hitnormal sample </summary>
         public static bool hasHitNormal(string hitsound)
         {
-            if (Regex.IsMatch(hitsound, WildCardToRegular("*-hitnormal*")))
+            if (Regex.IsMatch(hitsound.ToLower(), WildCardToRegular("*-hitnormal*")))
                 return true;
             else return false;
         }
@@ -40,7 +40,7 @@ namespace ManiaChecks
         {
             foreach (var hitSound in hitSoundList)
                 if (hasHitNormal(hitSound))
-                    yield return hitSound;
+                    yield return hitSound.ToLower();
         }
 
         /// <summary> Updated difficulty dictionary for Mania </summary>
