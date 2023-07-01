@@ -5,6 +5,7 @@ using MapsetVerifierFramework.objects;
 using MapsetVerifierFramework.objects.attributes;
 using MapsetVerifierFramework.objects.metadata;
 using MapsetParser.statics;
+using static MapsetParser.objects.Beatmap;
 
 namespace ManiaChecks
 {
@@ -50,6 +51,10 @@ namespace ManiaChecks
         {
             foreach (Beatmap beatmap in beatmapSet.beatmaps)
             {
+                if (beatmap.generalSettings.mode != Mode.Mania)
+                {
+                    continue;
+                }
                 foreach (Sample storyHitSound in beatmap.samples)
                     foreach (Issue issue in GetStoryHitSoundIssue(beatmap, storyHitSound, ".osu"))
                         yield return issue;

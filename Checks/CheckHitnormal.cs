@@ -6,6 +6,8 @@ using MapsetVerifierFramework.objects.attributes;
 using MapsetVerifierFramework.objects.metadata;
 using System.Collections.Generic;
 using static ManiaChecks.Utils;
+using System.Reflection.Metadata.Ecma335;
+using static MapsetParser.objects.Beatmap;
 
 namespace ManiaChecks
 {
@@ -62,18 +64,24 @@ namespace ManiaChecks
                     yield return new Issue(GetTemplate("HitnormalFile"), beatmap);
 
             // A hitnormal has been found. Check whether it is overriding it.
-            else 
-            foreach (Beatmap beatmap in beatmapSet.beatmaps)
-                foreach (var timingLine in beatmap.timingLines)
+            else
+                foreach (Beatmap beatmap in beatmapSet.beatmaps)
                 {
-                    if (timingLine.sampleset == Beatmap.Sampleset.Auto)
-                        yield return new Issue(GetTemplate("HitnormalOverride"), beatmap);
+                    if (beatmap.generalSettings.mode != Mode.Mania)
+                    {
+                        continue;
+                    }
+                    foreach (var timingLine in beatmap.timingLines)
+                    {
+                        if (timingLine.sampleset == Beatmap.Sampleset.Auto)
+                            yield return new Issue(GetTemplate("HitnormalOverride"), beatmap);
 
-                    string customIndex = timingLine.customIndex == 1 ? "" : timingLine.customIndex.ToString();
-                    string sample = timingLine.sampleset.ToString().ToLower() + "-hitnormal" + customIndex;
+                        string customIndex = timingLine.customIndex == 1 ? "" : timingLine.customIndex.ToString();
+                        string sample = timingLine.sampleset.ToString().ToLower() + "-hitnormal" + customIndex;
 
-                    if (!isHitNormalInList(sample, hitnormalList))
-                        yield return new Issue(GetTemplate("HitnormalOverride"), beatmap);
+                        if (!isHitNormalInList(sample, hitnormalList))
+                            yield return new Issue(GetTemplate("HitnormalOverride"), beatmap);
+                    }
                 }
         }
     }

@@ -49,7 +49,6 @@ namespace ManiaChecks
 						"timestamp", "beatmap")
 					.WithCause(
 						"There is a hitsound inconsistency") },
-
                 { "Problem",
                     new IssueTemplate(Issue.Level.Problem,
                         "{0} is used but does not exist.",
@@ -114,7 +113,7 @@ namespace ManiaChecks
 					// Adds the various hitsounds to the hitsound list
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.Clap))
 					{
-						(HitObject.HitSound, double, string, Sampleset, string) hitsound = ( (hitObject.filename == null)? HitObject.HitSound.Clap : HitObject.HitSound.None, hitObject.time, hitObject.filename, (hitObject.sampleset == Sampleset.Auto)?  samplesetList[index].Item2 : hitObject.sampleset, (samplesetList[index].Item3 == "1")? "" : samplesetList[index].Item3);
+						(HitObject.HitSound, double, string, Sampleset, string) hitsound = ( (hitObject.filename == null)? HitObject.HitSound.Clap : HitObject.HitSound.None, hitObject.time, hitObject.filename, (hitObject.addition == Sampleset.Auto) ? ((hitObject.sampleset == Sampleset.Auto) ? samplesetList[index].Item2 : hitObject.sampleset) : hitObject.addition, (samplesetList[index].Item3 == "1")? "" : samplesetList[index].Item3);
 						if (!Added.Contains((hitsound.Item1,hitsound.Item3,hitsound.Item4,hitsound.Item5)))
 						{
                             hitsoundList.Add(hitsound);
@@ -127,7 +126,7 @@ namespace ManiaChecks
 					} 
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.Normal))
 					{      
-						(HitObject.HitSound, double, string, Sampleset, string) hitsound = ((hitObject.filename == null) ? HitObject.HitSound.Normal : HitObject.HitSound.None, hitObject.time, hitObject.filename, (hitObject.sampleset == Sampleset.Auto) ? samplesetList[index].Item2 : hitObject.sampleset, (samplesetList[index].Item3 == "1") ? "" : samplesetList[index].Item3);
+						(HitObject.HitSound, double, string, Sampleset, string) hitsound = ((hitObject.filename == null) ? HitObject.HitSound.Normal : HitObject.HitSound.None, hitObject.time, hitObject.filename, (hitObject.addition == Sampleset.Auto) ? ((hitObject.sampleset == Sampleset.Auto) ? samplesetList[index].Item2 : hitObject.sampleset) : hitObject.addition, (samplesetList[index].Item3 == "1") ? "" : samplesetList[index].Item3);
                         if (!Added.Contains((hitsound.Item1, hitsound.Item3, hitsound.Item4, hitsound.Item5)))
                         {
                             hitsoundList.Add(hitsound);
@@ -136,11 +135,11 @@ namespace ManiaChecks
                     }
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.None))
 					{
-						(HitObject.HitSound, double, string, Sampleset, string) hitsound = (HitObject.HitSound.None, hitObject.time, hitObject.filename, (hitObject.sampleset == Sampleset.Auto) ? samplesetList[index].Item2 : hitObject.sampleset, (samplesetList[index].Item3 == "1") ? "" : samplesetList[index].Item3);
+						(HitObject.HitSound, double, string, Sampleset, string) hitsound = (HitObject.HitSound.None, hitObject.time, hitObject.filename, (hitObject.addition == Sampleset.Auto) ? ((hitObject.sampleset == Sampleset.Auto) ? samplesetList[index].Item2 : hitObject.sampleset) : hitObject.addition, (samplesetList[index].Item3 == "1") ? "" : samplesetList[index].Item3);
                     }
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.Whistle))
 					{
-						(HitObject.HitSound, double, string, Sampleset, string) hitsound = ((hitObject.filename == null) ? HitObject.HitSound.Whistle : HitObject.HitSound.None, hitObject.time, hitObject.filename, (hitObject.sampleset == Sampleset.Auto) ? samplesetList[index].Item2 : hitObject.sampleset, (samplesetList[index].Item3 == "1") ? "" : samplesetList[index].Item3);
+						(HitObject.HitSound, double, string, Sampleset, string) hitsound = ((hitObject.filename == null) ? HitObject.HitSound.Whistle : HitObject.HitSound.None, hitObject.time, hitObject.filename, (hitObject.addition == Sampleset.Auto) ? ((hitObject.sampleset == Sampleset.Auto) ? samplesetList[index].Item2 : hitObject.sampleset) : hitObject.addition, (samplesetList[index].Item3 == "1") ? "" : samplesetList[index].Item3);
                         if (!Added.Contains((hitsound.Item1, hitsound.Item3, hitsound.Item4, hitsound.Item5)))
                         {
                             hitsoundList.Add(hitsound);
@@ -153,7 +152,7 @@ namespace ManiaChecks
                     }
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.Finish))
 					{
-						(HitObject.HitSound, double, string, Sampleset, string) hitsound = ((hitObject.filename == null) ? HitObject.HitSound.Finish : HitObject.HitSound.None, hitObject.time, hitObject.filename, (hitObject.sampleset == Sampleset.Auto) ? samplesetList[index].Item2 : hitObject.sampleset, (samplesetList[index].Item3 == "1") ? "" : samplesetList[index].Item3);
+						(HitObject.HitSound, double, string, Sampleset, string) hitsound = ((hitObject.filename == null) ? HitObject.HitSound.Finish : HitObject.HitSound.None, hitObject.time, hitObject.filename, (hitObject.addition == Sampleset.Auto) ? ((hitObject.sampleset == Sampleset.Auto) ? samplesetList[index].Item2 : hitObject.sampleset) : hitObject.addition, (samplesetList[index].Item3 == "1") ? "" : samplesetList[index].Item3);
                         if (!Added.Contains((hitsound.Item1, hitsound.Item3, hitsound.Item4, hitsound.Item5)))
                         {
                             hitsoundList.Add(hitsound);
