@@ -51,8 +51,8 @@ namespace ManiaChecks
 						"There is a hitsound inconsistency") },
                 { "Problem",
                     new IssueTemplate(Issue.Level.Problem,
-                        "{0} is used but does not exist.",
-                        "hitsound")
+                        "{0} is used at {1} but does not exist.",
+                        "hitsound", "timestamp")
                     .WithCause(
                         "Missing hitsound") },
                 { "Double Hitsound",
@@ -75,9 +75,9 @@ namespace ManiaChecks
             foreach (var s in beatmapSet.hitSoundFiles)
             {
                 filesList.Add(s.ToLower());
+
             }
 			List<(HitObject.HitSound, Sampleset, string)> checkedHS = new List<(HitObject.HitSound, Sampleset, string)>();
-            List<string> checkedSI = new List<string>();
             foreach (var item in beatmapSet.beatmaps.Select((beatmap, i) => new { i, beatmap }))
 			{
 				beatmapsList.Add(item.i);
@@ -98,6 +98,7 @@ namespace ManiaChecks
                 List<(HitObject.HitSound, string, Sampleset, string)> Added = new List<(HitObject.HitSound, string, Sampleset, string)>();
                 List<(string, HitObject.HitSound)> SampleAdded = new List<(string, HitObject.HitSound)>();
                 double tS = 0;
+
                 foreach (var hitObject in item.beatmap.hitObjects)
 				{
 					if (hitObject.time != tS) 
@@ -113,11 +114,16 @@ namespace ManiaChecks
 					// Adds the various hitsounds to the hitsound list
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.Clap))
 					{
+
 						(HitObject.HitSound, double, string, Sampleset, string) hitsound = ( (hitObject.filename == null)? HitObject.HitSound.Clap : HitObject.HitSound.None, hitObject.time, hitObject.filename, (hitObject.addition == Sampleset.Auto) ? ((hitObject.sampleset == Sampleset.Auto) ? samplesetList[index].Item2 : hitObject.sampleset) : hitObject.addition, (samplesetList[index].Item3 == "1")? "" : samplesetList[index].Item3);
 						if (!Added.Contains((hitsound.Item1,hitsound.Item3,hitsound.Item4,hitsound.Item5)))
 						{
                             hitsoundList.Add(hitsound);
 							Added.Add((hitsound.Item1, hitsound.Item3, hitsound.Item4, hitsound.Item5));
+                            if (hitsound.Item1 != HitObject.HitSound.None && hitsound.Item5 != "0" && !isHitNormalInList((hitsound.Item4.ToString().ToLower() + "-hit" + hitsound.Item1.ToString().ToLower() + hitsound.Item5.ToString()), filesList))
+                            {
+                                yield return new Issue(GetTemplate("Problem"), item.beatmap, hitsound.Item4.ToString().ToLower() + "-hit" + hitsound.Item1.ToString().ToLower() + hitsound.Item5.ToString() + ".wav/ogg", Timestamp.Get(hitObject.time));
+                            }
                         }
 						else
 						{
@@ -131,6 +137,10 @@ namespace ManiaChecks
                         {
                             hitsoundList.Add(hitsound);
                             Added.Add((hitsound.Item1, hitsound.Item3, hitsound.Item4, hitsound.Item5));
+                            if (hitsound.Item1 != HitObject.HitSound.None && hitsound.Item5 != "0" && !isHitNormalInList((hitsound.Item4.ToString().ToLower() + "-hit" + hitsound.Item1.ToString().ToLower() + hitsound.Item5.ToString()), filesList))
+                            {
+                                yield return new Issue(GetTemplate("Problem"), item.beatmap, hitsound.Item4.ToString().ToLower() + "-hit" + hitsound.Item1.ToString().ToLower() + hitsound.Item5.ToString() + ".wav/ogg", Timestamp.Get(hitObject.time));
+                            }
                         }
                     }
 					if (hitObject.hitSound.HasFlag(HitObject.HitSound.None))
@@ -144,6 +154,10 @@ namespace ManiaChecks
                         {
                             hitsoundList.Add(hitsound);
                             Added.Add((hitsound.Item1, hitsound.Item3, hitsound.Item4, hitsound.Item5));
+                            if (hitsound.Item1 != HitObject.HitSound.None && hitsound.Item5 != "0" && !isHitNormalInList((hitsound.Item4.ToString().ToLower() + "-hit" + hitsound.Item1.ToString().ToLower() + hitsound.Item5.ToString()), filesList))
+                            {
+                                yield return new Issue(GetTemplate("Problem"), item.beatmap, hitsound.Item4.ToString().ToLower() + "-hit" + hitsound.Item1.ToString().ToLower() + hitsound.Item5.ToString() + ".wav/ogg", Timestamp.Get(hitObject.time));
+                            }
                         }
                         else
                         {
@@ -157,6 +171,10 @@ namespace ManiaChecks
                         {
                             hitsoundList.Add(hitsound);
                             Added.Add((hitsound.Item1, hitsound.Item3, hitsound.Item4, hitsound.Item5));
+                            if (hitsound.Item1 != HitObject.HitSound.None && hitsound.Item5 != "0" && !isHitNormalInList((hitsound.Item4.ToString().ToLower() + "-hit" + hitsound.Item1.ToString().ToLower() + hitsound.Item5.ToString()), filesList))
+                            {
+                                yield return new Issue(GetTemplate("Problem"), item.beatmap, hitsound.Item4.ToString().ToLower() + "-hit" + hitsound.Item1.ToString().ToLower() + hitsound.Item5.ToString() + ".wav/ogg", Timestamp.Get(hitObject.time));
+                            }
                         }
                         else
                         {
@@ -168,6 +186,10 @@ namespace ManiaChecks
 					{
                         sampleList.Add((hitObject.filename, hitObject.time, hitObject.hitSound));
 						SampleAdded.Add((hitObject.filename, hitObject.hitSound));
+                    }
+                    if (hitObject.filename != null && !filesList.Contains(hitObject.filename.ToLower()))
+                    {
+                        yield return new Issue(GetTemplate("Problem"), item.beatmap, hitObject.filename, Timestamp.Get(hitObject.time));
                     }
                 }
 				beatmapListHS.Add(hitsoundList);
@@ -186,11 +208,6 @@ namespace ManiaChecks
 					{
 						if (T1.Item1 != HitObject.HitSound.None)
 						{
-                            if (T1.Item5 != "0" && !checkedHS.Contains((T1.Item1, T1.Item4, T1.Item5)) && !isHitNormalInList((T1.Item4.ToString().ToLower() + "-hit" + T1.Item1.ToString().ToLower() + T1.Item5.ToString()), filesList))
-                            {
-                                yield return new Issue(GetTemplate("Problem"), beatmapSet.beatmaps[beatmapsList[i]], T1.Item4.ToString().ToLower() + "-hit" + T1.Item1.ToString().ToLower() + T1.Item5.ToString() + ".wav/ogg");
-								checkedHS.Add((T1.Item1, T1.Item4, T1.Item5));
-                            }
                             bool hasNote = false;
 							foreach ((HitObject.HitSound, double, string, Sampleset, string) T2 in beatmapListHS[j])
 							{
@@ -229,11 +246,6 @@ namespace ManiaChecks
 					{
 						if (T1.Item1 != null)
 						{
-							if (!checkedSI.Contains(T1.Item1) && !filesList.Contains(T1.Item1.ToLower()))
-							{
-                                yield return new Issue(GetTemplate("Problem"), beatmapSet.beatmaps[beatmapsList[i]], T1.Item1);
-                                checkedSI.Add(T1.Item1);
-                            }
                             bool hasNote = false;
                             foreach ((string, double, HitObject.HitSound) T2 in beatmapListSI[j])
                             {
