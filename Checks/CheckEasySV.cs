@@ -51,32 +51,39 @@ namespace ManiaChecks
 
         public override IEnumerable<Issue> GetIssues(BeatmapSet beatmapSet)
         {
-            var beatmap = beatmapSet.beatmaps.First();                              // The SV rule only applies to the first chart of a beatmapSet
-            var difficulty = getManiaDifficulty(beatmap.metadataSettings.version);  // Get theoretical difficulty if the first chart.
-
-            if (difficulty == Beatmap.Difficulty.Easy | difficulty == Beatmap.Difficulty.Normal)
+            List<float> keymodes = new List<float>();
+            foreach (var beatmap in beatmapSet.beatmaps)
             {
-                var baseBPM = GetMostCommonBeatLength(beatmap); // Theoretical BPM to normalize the chart to    
-                var timingLineList = beatmap.timingLines;       // Caling the "timingLines" list once
+                var difficulty = getManiaDifficulty(beatmap.metadataSettings.version);  // Get theoretical difficulty if the first chart.
 
-                // Instanciate needed variables. These will keep track of the previous RedLine which the GreenLines will be relative to.
-                UninheritedLine prevUninheritedLine;
-                double prevUninheritedBeatLength = 0;
-                foreach (var timingLine in timingLineList)
-                {   
-                    if (timingLine.uninherited == true)
+                if ((difficulty == Beatmap.Difficulty.Easy || difficulty == Beatmap.Difficulty.Normal) && !keymodes.Contains(beatmap.difficultySettings.circleSize))
+                {
+                    keymodes.Add(beatmap.difficultySettings.circleSize);
+                    if (difficulty == Beatmap.Difficulty.Easy | difficulty == Beatmap.Difficulty.Normal)
                     {
-                        prevUninheritedLine = (UninheritedLine) timingLine;
-                        prevUninheritedBeatLength = prevUninheritedLine.msPerBeat;
-                    }
+                        var baseBPM = GetMostCommonBeatLength(beatmap); // Theoretical BPM to normalize the chart to    
+                        var timingLineList = beatmap.timingLines;       // Caling the "timingLines" list once
 
-                    else
-                    {
-                        double correctMultiplier = Math.Round(baseBPM / prevUninheritedBeatLength, 2); // Theoretical correct multiplier.
-                        double currentMultiplier = Math.Round(timingLine.svMult, 2);                   // Current multiplier being used.
+                        // Instanciate needed variables. These will keep track of the previous RedLine which the GreenLines will be relative to.
+                        UninheritedLine prevUninheritedLine;
+                        double prevUninheritedBPM = 0;
+                        foreach (var timingLine in timingLineList)
+                        {
+                            if (timingLine.uninherited == true)
+                            {
+                                prevUninheritedLine = (UninheritedLine)timingLine;
+                                prevUninheritedBPM = prevUninheritedLine.bpm;
+                            }
 
-                        if (!almostEquals(correctMultiplier, currentMultiplier, 0.01))
-                            yield return new Issue(GetTemplate("Normalization Problem"), beatmap, beatmap.metadataSettings.version, Timestamp.Get(timingLine.offset), correctMultiplier, currentMultiplier);
+                            else
+                            {
+                                double correctMultiplier = Math.Round(baseBPM / prevUninheritedBPM, 2); // Theoretical correct multiplier.
+                                double currentMultiplier = Math.Round(timingLine.svMult, 2);                   // Current multiplier being used.
+
+                                if (!almostEquals(correctMultiplier, currentMultiplier, 0.01))
+                                    yield return new Issue(GetTemplate("Normalization Problem"), beatmap, beatmap.metadataSettings.version, Timestamp.Get(timingLine.offset), correctMultiplier, currentMultiplier);
+                            }
+                        }
                     }
                 }
             }
