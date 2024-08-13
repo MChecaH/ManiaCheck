@@ -104,31 +104,51 @@ namespace ManiaChecks
             // The last playable time in the beatmap - the last timing point extends to this time.
             // Note: This is more accurate and may present different results because osu-stable didn't have the ability to calculate slider durations in this context.
             double lastTime = beatmap.hitObjects.LastOrDefault()?.GetEndTime() ?? beatmap.timingLines.LastOrDefault()?.offset ?? 0;
+            double firstTime = beatmap.hitObjects.FirstOrDefault()?.time ?? 0;
 
             // TimingLine -> UninheritedLine cast conversion to fetch "beatLength" values
             List<UninheritedLine> uninheritedLines = beatmap.timingLines.OfType<UninheritedLine>().Cast<UninheritedLine>().ToList();
 
-            var mostCommon =
-                // Construct a set of (beatLength, duration) tuples for each individual timing point.
-                uninheritedLines.Select((t, i) =>
-                                {
-                                    if (t.offset > lastTime)
-                                        return (beatLength: t.msPerBeat, 0);
+            List<double> timeList = new List<double>();
+            List<double> BPMList = new List<double>();
 
-                                    // osu-stable forced the first control point to start at 0.
-                                    // This is reproduced here to maintain compatibility around osu!mania scroll speed and song select display.
-                                    double currentTime = i == 0 ? 0 : t.offset;
-                                    double nextTime = i == beatmap.timingLines.Count - 1 ? lastTime : beatmap.timingLines[i + 1].offset;
+            bool first = true;
+            double currentBPM = 0;
+            foreach (var item in uninheritedLines)
+            {
+                if (!first)
+                {
+                    if (BPMList.Any(item => Math.Abs(item - currentBPM) <= 1e-8))
+                    {
+                        timeList[BPMList.IndexOf(currentBPM)] += item.offset - firstTime;
+                    }
+                    else
+                    {
+                        timeList.Add(item.offset - firstTime);
+                        BPMList.Add(currentBPM);
+                        
+                    }
+                    firstTime = item.offset;
+                    currentBPM = item.bpm;
 
-                                    return (beatLength: t.msPerBeat, duration: nextTime - currentTime);
-                                })
-                                // Aggregate durations into a set of (beatLength, duration) tuples for each beat length
-                                .GroupBy(t => Math.Round(t.beatLength * 1000) / 1000)
-                                .Select(g => (beatLength: g.Key, duration: g.Sum(t => t.duration)))
-                                // Get the most common one, or 0 as a suitable default
-                                .OrderByDescending(i => i.duration).FirstOrDefault();
+                }
+                else
+                {
+                    first = false;
+                    currentBPM = item.bpm;
+                }
 
-            return mostCommon.beatLength;
+            }
+            if (BPMList.Any(item => Math.Abs(item - currentBPM) <= 1e-8))
+            {
+                timeList[BPMList.IndexOf(currentBPM)] += lastTime - firstTime;
+            }
+            else {
+                timeList.Add(lastTime - firstTime);
+                BPMList.Add(currentBPM);
+            }
+
+            return Math.Round(BPMList[timeList.IndexOf(timeList.Max())],2);
         }
 
         /// <summary> I love working with BeatLength. Converts "beatLength" to "BPM" and viceversa. </summary>

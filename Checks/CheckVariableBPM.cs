@@ -60,14 +60,7 @@ namespace ManiaChecks
                             "{0} Isn't followed by any normalizing green line. An inherited timing line with a multiplier of {1} should be added on top.",
                             "timestamp", "multiplier")
                         .WithCause("Uninherited line is unnormalized.")
-                },
-                {
-                    "Debug",
-                        new IssueTemplate(Issue.Level.Warning,
-                            "Current BPM == {0} | Normal BPM == {1}",
-                            "val1", "val2")
-                        .WithCause("Puto tonto.")
-                }   
+                }
             };
         }
 
@@ -87,22 +80,20 @@ namespace ManiaChecks
                 double prevOffset = 0;                  // RedLine Timestamp
                 double prevBPM = 0;                     // RedLine beatLength
                 bool firstTimingLine = false;           // Control bit in charge of turning on once the first GreenLine after a RedLine is parsed
-                foreach (var timingLine in timingLineList)
+                for (int i = 0; i<timingLineList.Count-1; i++)
                 {   
-                    if (timingLine.uninherited == false)
+                    if (timingLineList[i].uninherited == false)
                     {   
                         double correctMultiplier = Math.Round(baseBPM / prevBPM, 2); // Theoretical correct multiplier.
-                        double currentMultiplier = Math.Round(timingLine.svMult, 2); // Current multiplier being used.
-
-                        yield return new Issue(GetTemplate("Debug"), beatmap, Math.Round(bpmConverter(prevBPM), 2), Math.Round(bpmConverter(baseBPM), 2));
+                        double currentMultiplier = Math.Round(timingLineList[i].svMult, 2); // Current multiplier being used.
 
                         // Check for unnormalized values
                         if (!almostEquals(currentMultiplier, correctMultiplier, 0.01))
-                            yield return new Issue(GetTemplate("Unnormal Value Warning"), beatmap, Timestamp.Get(timingLine.offset));
+                            yield return new Issue(GetTemplate("Unnormal Value Warning"), beatmap, Timestamp.Get(timingLineList[i].offset));
 
                         // Check for normalizing GreenLines not being right on top of the previous RedLine
-                        else if (!firstTimingLine && timingLine.offset != prevOffset && !almostEquals(baseBPM, prevBPM, 1))
-                            yield return new Issue(GetTemplate("Normalized Value Moved Problem"), beatmap, Timestamp.Get(timingLine.offset), prevOffset);
+                        else if (!firstTimingLine && timingLineList[i].offset != prevOffset && !almostEquals(baseBPM, prevBPM, 1))
+                            yield return new Issue(GetTemplate("Normalized Value Moved Problem"), beatmap, Timestamp.Get(timingLineList[i].offset), prevOffset);
 
                         firstTimingLine = true;
                     }
@@ -110,16 +101,16 @@ namespace ManiaChecks
                     else
                     {
                         // Adapt variables to new RedLine.
-                        prevUninheritedLine = (UninheritedLine) timingLine;
+                        prevUninheritedLine = (UninheritedLine) timingLineList[i];
                         prevOffset = prevUninheritedLine.offset;
-                        prevBPM = prevUninheritedLine.msPerBeat;
+                        prevBPM = prevUninheritedLine.bpm;
 
                         // Reset control bit for the first GreenLine found after a RedLine.
                         firstTimingLine = false;
 
                         // Check if a RedLine needs to be normalized if it doesn't have any GreenLines on it.
-                        if (timingLine.Next() is UninheritedLine && !almostEquals(baseBPM, prevUninheritedLine.msPerBeat, 1))
-                            yield return new Issue(GetTemplate("Green Line Not Found"), beatmap, Timestamp.Get(prevOffset), Math.Round(prevBPM / baseBPM, 2));
+                        if (timingLineList[i+1] is UninheritedLine && !almostEquals(baseBPM, prevUninheritedLine.bpm, 1))
+                            yield return new Issue(GetTemplate("Green Line Not Found"), beatmap, Timestamp.Get(prevOffset), Math.Round(baseBPM / prevBPM, 2));
                     }
                 }
             }
