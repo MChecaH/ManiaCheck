@@ -104,7 +104,7 @@ namespace ManiaChecks
             // The last playable time in the beatmap - the last timing point extends to this time.
             // Note: This is more accurate and may present different results because osu-stable didn't have the ability to calculate slider durations in this context.
             double lastTime = beatmap.hitObjects.LastOrDefault()?.GetEndTime() ?? beatmap.timingLines.LastOrDefault()?.offset ?? 0;
-            double firstTime = beatmap.hitObjects.FirstOrDefault()?.time ?? 0;
+            double firstTime = 0;
 
             // TimingLine -> UninheritedLine cast conversion to fetch "beatLength" values
             List<UninheritedLine> uninheritedLines = beatmap.timingLines.OfType<UninheritedLine>().Cast<UninheritedLine>().ToList();
@@ -116,7 +116,7 @@ namespace ManiaChecks
             double currentBPM = 0;
             foreach (var item in uninheritedLines)
             {
-                if (!first)
+                if (!first && item.offset > firstTime && item.offset < lastTime)
                 {
                     if (BPMList.Any(item => item - currentBPM == 0))
                     {
@@ -135,7 +135,8 @@ namespace ManiaChecks
                 else
                 {
                     first = false;
-                    currentBPM = Math.Round(item.bpm,2);
+                    firstTime = item.offset;
+                    currentBPM = Math.Round(item.bpm, 2);
                 }
 
             }

@@ -72,8 +72,8 @@ namespace ManiaChecks
                 if (beatmap == beatmapSet.beatmaps.First() && (difficulty == Beatmap.Difficulty.Easy | difficulty == Beatmap.Difficulty.Normal))
                     continue;
 
-                var baseBPM = GetMostCommonBeatLength(beatmap); // Theoretical BPM to normalize the chart to 
-                var timingLineList = beatmap.timingLines;       // Caling the "timingLines" list once
+                var baseBPM = GetMostCommonBeatLength(beatmap);         // Theoretical BPM to normalize the chart to 
+                var timingLineList = beatmap.timingLines;               // Caling the "timingLines" list once
 
                 // Instanciate needed variables. These will keep track of the previous RedLine which the GreenLines will be relative to.
                 UninheritedLine prevUninheritedLine;    // RedLine Initialization
