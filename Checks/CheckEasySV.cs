@@ -54,7 +54,7 @@ namespace ManiaChecks
             List<float> keymodes = new List<float>();
             foreach (var beatmap in beatmapSet.beatmaps)
             {
-                var difficulty = getManiaDifficulty(beatmap.metadataSettings.version);  // Get theoretical difficulty if the first chart.
+                var difficulty = getManiaDifficulty(beatmap.metadataSettings.version);
 
                 if ((difficulty == Beatmap.Difficulty.Easy || difficulty == Beatmap.Difficulty.Normal) && !keymodes.Contains(beatmap.difficultySettings.circleSize))
                 {
@@ -67,6 +67,8 @@ namespace ManiaChecks
                         // Instanciate needed variables. These will keep track of the previous RedLine which the GreenLines will be relative to.
                         UninheritedLine prevUninheritedLine;
                         double prevUninheritedBPM = 0;
+                        
+
                         foreach (var timingLine in timingLineList)
                         {
                             if (timingLine.uninherited == true)
@@ -80,7 +82,7 @@ namespace ManiaChecks
                                 double correctMultiplier = Math.Round(baseBPM / prevUninheritedBPM, 2); // Theoretical correct multiplier.
                                 double currentMultiplier = Math.Round(timingLine.svMult, 2);                   // Current multiplier being used.
 
-                                if (!almostEquals(correctMultiplier, currentMultiplier, 0.01))
+                                if (!almostEquals(currentMultiplier, correctMultiplier, 0.02))
                                     yield return new Issue(GetTemplate("Normalization Problem"), beatmap, beatmap.metadataSettings.version, Timestamp.Get(timingLine.offset), correctMultiplier, currentMultiplier);
                             }
                         }

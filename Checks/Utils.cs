@@ -118,7 +118,7 @@ namespace ManiaChecks
             {
                 if (!first)
                 {
-                    if (BPMList.Any(item => Math.Abs(item - currentBPM) <= 1e-8))
+                    if (BPMList.Any(item => item - currentBPM == 0))
                     {
                         timeList[BPMList.IndexOf(currentBPM)] += item.offset - firstTime;
                     }
@@ -129,13 +129,13 @@ namespace ManiaChecks
                         
                     }
                     firstTime = item.offset;
-                    currentBPM = item.bpm;
+                    currentBPM = Math.Round(item.bpm, 2);
 
                 }
                 else
                 {
                     first = false;
-                    currentBPM = item.bpm;
+                    currentBPM = Math.Round(item.bpm,2);
                 }
 
             }

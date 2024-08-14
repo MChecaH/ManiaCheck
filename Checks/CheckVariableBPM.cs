@@ -88,7 +88,7 @@ namespace ManiaChecks
                         double currentMultiplier = Math.Round(timingLineList[i].svMult, 2); // Current multiplier being used.
 
                         // Check for unnormalized values
-                        if (!almostEquals(currentMultiplier, correctMultiplier, 0.01))
+                        if (!almostEquals(currentMultiplier, correctMultiplier, 0.02))
                             yield return new Issue(GetTemplate("Unnormal Value Warning"), beatmap, Timestamp.Get(timingLineList[i].offset));
 
                         // Check for normalizing GreenLines not being right on top of the previous RedLine
