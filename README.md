@@ -11,31 +11,30 @@ ManiaCheck is an osu!mania plugin for [Naxess' Mapset verifier](https://github.c
 |  Category |            Check            |
 |:---------:|:---------------------------:|
 | Compose   | Long note too short (<20ms) |
-| Resources | Missing hitnormal           |
-| ~~Timing~~    | ~~Unnormalized SVs in EZ/NM~~   |
+| Timing    | Unnormalized SVs in EZ/NM   |
 | Compose   | Stacked notes               |
 | Compose   | Drain Time too short (<30s) |
-| Resources | Missing hitsound files |
+| Resources | Missing hitsound files      |
+| Resources | Custom histouns are not overridden |
+| Files     | Hitsound difficulty in song folder |
 
 ### Minor/Unreliable checks (Warnings)
 
 | Category |                Check               |
 |:--------:|:----------------------------------:|
 | Compose  | Long note too short (<30ms)        |
+| Resources| Missing hitnormal                  |
 | Settings | Too high OD                        |
 | Settings | Too high HP                        |
-| Files    | Hitsound difficulty in song folder |
+| Timing   | Unnormalized SVs                   |
 | Spread   | Chord size too high                |
 | Compose  | Almost Stacked notes               |
 | Compose  | Hitsound inconsistency between difficulties |
+| Compose  | Stryboard Hitsounds |
 | Compose  | Double hitsounds |
 
 
 ## Planned Checks
-
-- ~~Check that Easy difficulty doesn't have scroll changes~~
-- Check whether variable timing maps have scroll Normalisation
-- Check whether normalizing Green Lines are right on top of Red Lines
 - Check for **extremely** close together notes to avoid stuff like [this](https://cdn.discordapp.com/attachments/808360583669874688/996761548536156281/unknown.png).
 
 ## How to Install
@@ -51,3 +50,4 @@ ManiaCheck is an osu!mania plugin for [Naxess' Mapset verifier](https://github.c
 
 If you find something that doesn't feel right or want to make suggestions for potential checks, feel free to open a GitHub issue. You may also directly contact directly any of the project mantainers:
 - Tailsdk (Discord: tailsdk | osu!: [Tailsdk](https://osu.ppy.sh/users/6751666)) 
+- MChecaH (Discord: marticheca | osu!: [RandomeLoL](https://osu.ppy.sh/users/7080063)) 
