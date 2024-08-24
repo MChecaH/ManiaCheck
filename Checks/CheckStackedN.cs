@@ -6,6 +6,7 @@ using MapsetVerifierFramework.objects;
 using MapsetVerifierFramework.objects.attributes;
 using MapsetVerifierFramework.objects.metadata;
 using MathNet.Numerics;
+using static ManiaChecks.Utils;
 
 namespace ManiaChecks
 {
@@ -114,12 +115,6 @@ namespace ManiaChecks
                 type == otherType ?
                     type + "s" :
                     type + " and " + otherType;
-        }
-
-        private static int getColumn(HitObject hitObject, float keys)
-        {
-            // This is the * Magic Fix *
-            return (int)hitObject.Position.X / (512 / (int)keys);
         }
     }
 }

@@ -163,5 +163,10 @@ namespace ManiaChecks
         {
             return Math.Abs(value1 - value2) <= epsilon;
         }
+        public static int getColumn(HitObject hitObject, float keys)
+        {
+            // This is the * Magic Fix *
+            return (int)hitObject.Position.X / (512 / (int)keys);
+        }
     }
 }
