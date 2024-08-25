@@ -11,27 +11,29 @@ ManiaCheck is an osu!mania plugin for [Naxess' Mapset verifier](https://github.c
 |  Category |            Check            |
 |:---------:|:---------------------------:|
 | Compose   | Long note too short (<20ms) |
-| Timing    | Unnormalized SVs in EZ/NM   |
 | Compose   | Stacked notes               |
 | Compose   | Drain Time too short (<30s) |
+| Compose   | Underused/overused column   |
+| Timing    | Unnormalized SVs in EZ/NM   |
 | Resources | Missing hitsound files      |
-| Resources | Custom histouns are not overridden |
-| Files     | Hitsound difficulty in song folder |
+| Resources | Custom histounds are not overridden |
+| Files     | Hitsound difficulty in song folder  |
 
 ### Minor/Unreliable checks (Warnings)
 
 | Category |                Check               |
 |:--------:|:----------------------------------:|
+| Compose  | Almost Stacked notes               |
+| Compose  | Hitsound inconsistency between difficulties |
+| Compose  | Stryboard Hitsounds                |
+| Compose  | Double hitsounds                   |
 | Compose  | Long note too short (<30ms)        |
+| Compose  | Slightly underused/overused column |
+| Timing   | Unnormalized SVs                   |
 | Resources| Missing hitnormal                  |
 | Settings | Too high OD                        |
 | Settings | Too high HP                        |
-| Timing   | Unnormalized SVs                   |
 | Spread   | Chord size too high                |
-| Compose  | Almost Stacked notes               |
-| Compose  | Hitsound inconsistency between difficulties |
-| Compose  | Stryboard Hitsounds |
-| Compose  | Double hitsounds |
 
 
 ## Planned Checks
