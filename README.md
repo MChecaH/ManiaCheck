@@ -36,9 +36,6 @@ ManiaCheck is an osu!mania plugin for [Naxess' Mapset verifier](https://github.c
 | Spread   | Chord size too high                |
 
 
-## Planned Checks
-- Check for **extremely** close together notes to avoid stuff like [this](https://cdn.discordapp.com/attachments/808360583669874688/996761548536156281/unknown.png).
-
 ## How to Install
 
 - Download the latest release of `ManiaChecks.dll`.
