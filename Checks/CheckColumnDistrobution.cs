@@ -112,7 +112,7 @@ namespace ManiaChecks
                     {
                         yield return new Issue(GetTemplate("Overused column warning"), beatmap, i + 1);
                     }
-                    else if (columnDistrobution[i] <= belowAverageNotes)
+                    else if (columnDistribution[i] <= belowAverageNotes)
                     {
                         yield return new Issue(GetTemplate("Underused column warning"), beatmap, i + 1);
                     }
