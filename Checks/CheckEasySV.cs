@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static ManiaChecks.Utils;
+using static MapsetParser.objects.Beatmap;
 
 namespace ManiaChecks
 {
@@ -54,6 +55,10 @@ namespace ManiaChecks
             List<float> keymodes = new List<float>();
             foreach (var beatmap in beatmapSet.beatmaps)
             {
+                if (beatmap.generalSettings.mode != Mode.Mania)
+                {
+                    continue;
+                }
                 var difficulty = getManiaDifficulty(beatmap.metadataSettings.version);
 
                 if ((difficulty == Beatmap.Difficulty.Easy || difficulty == Beatmap.Difficulty.Normal) && !keymodes.Contains(beatmap.difficultySettings.circleSize))

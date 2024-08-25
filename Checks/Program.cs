@@ -12,8 +12,9 @@ namespace ManiaChecks
             CheckerRegistry.RegisterCheck(new CheckSeven());
             CheckerRegistry.RegisterCheck(new checkHN());
             CheckerRegistry.RegisterCheck(new CheckHSDiff());
-            //CheckerRegistry.RegisterCheck(new CheckEzSv()); Broken Base BPM calc
-            //CheckerRegistry.RegisterCheck(new CheckVarBPM()); Broken Base BPM calc
+            CheckerRegistry.RegisterCheck(new CheckEzSv());
+            CheckerRegistry.RegisterCheck(new CheckVarBPM());
+            CheckerRegistry.RegisterCheck(new CheckColumnDistribution());
             CheckerRegistry.RegisterCheck(new CheckConcurrent());
             CheckerRegistry.RegisterCheck(new CheckDrainTime());
             CheckerRegistry.RegisterCheck(new CheckSBHS());
