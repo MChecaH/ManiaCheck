@@ -102,7 +102,7 @@ namespace ManiaChecks
                 int sigBelowAverageNotes = (int)(averageNotes * 0.65);
                 int sigAboveAverageNotes = (int)(averageNotes * 1.35);
 
-                for (int i = 0; i < columnDistrobution.Length; i++)
+                for (int i = 0; i < columnDistribution.Length; i++)
                 {
                     if (columnDistrobution[i] == 0)
                     {
