@@ -14,7 +14,8 @@ namespace ManiaChecks
             CheckerRegistry.RegisterCheck(new CheckHSDiff());
             CheckerRegistry.RegisterCheck(new CheckEzSv());
             CheckerRegistry.RegisterCheck(new CheckVarBPM());
-            CheckerRegistry.RegisterCheck(new CheckColumnDistobution());
+            CheckerRegistry.RegisterCheck(new CheckColumnDistribution());
+
             CheckerRegistry.RegisterCheck(new CheckConcurrent());
             CheckerRegistry.RegisterCheck(new CheckDrainTime());
             CheckerRegistry.RegisterCheck(new CheckSBHS());
