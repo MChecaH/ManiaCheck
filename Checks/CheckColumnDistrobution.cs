@@ -13,7 +13,7 @@ using System.Security.Cryptography;
 namespace ManiaChecks
 {
     [Check]
-    public class CheckColumnDistobution : BeatmapSetCheck
+    public class CheckColumnDistribution : BeatmapSetCheck
     {
         public override CheckMetadata GetMetadata() => new BeatmapCheckMetadata()
         {
