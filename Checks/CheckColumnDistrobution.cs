@@ -92,7 +92,7 @@ namespace ManiaChecks
                 int[] columnDistribution = new int[keys];
                 foreach (var hitObject in beatmap.hitObjects)
                 {
-                    columnDistrobution[getColumn(hitObject, keys)] += 1;
+                    columnDistribution[getColumn(hitObject, keys)] += 1;
                     totalNotes += 1;
                 }
 
