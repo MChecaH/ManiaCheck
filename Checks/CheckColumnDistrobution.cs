@@ -89,7 +89,7 @@ namespace ManiaChecks
                 }
                 int keys = (int)beatmap.difficultySettings.circleSize;
                 int totalNotes = 0;
-                int[] columnDistrobution = new int[keys];
+                int[] columnDistribution = new int[keys];
                 foreach (var hitObject in beatmap.hitObjects)
                 {
                     columnDistrobution[getColumn(hitObject, keys)] += 1;
