@@ -5,7 +5,6 @@ using MapsetParser.statics;
 using MapsetVerifierFramework.objects;
 using MapsetVerifierFramework.objects.attributes;
 using MapsetVerifierFramework.objects.metadata;
-using MathNet.Numerics;
 using static ManiaChecks.Utils;
 
 namespace ManiaChecks
@@ -72,7 +71,6 @@ namespace ManiaChecks
         public override IEnumerable<Issue> GetIssues(Beatmap beatmap)
         {
             int hitObjectCount = beatmap.hitObjects.Count;
-            int keys = (int)beatmap.difficultySettings.circleSize;
             for (int i = 0; i < hitObjectCount - 1; ++i)
             {
                 var hitObject = beatmap.hitObjects[i];           // Current Object to check
@@ -83,14 +81,11 @@ namespace ManiaChecks
 
                     if (hitObject.Position.X == otherHitObject.Position.X) break;
 
-                    int hitObjectColumn = getColumn(hitObject, keys);
-                    int otherHitObjectColumn = getColumn(otherHitObject, keys);
-
                     double msApart = otherHitObject.time - hitObject.GetEndTime(); // Time between objects
 
                     if (msApart > 30) break;                     // The second check will only check up to 30 ms forwards
 
-                    if (hitObjectColumn == otherHitObjectColumn) // Check whether the objects' columns are the same
+                    if ( almostEquals(hitObject.Position.X, otherHitObject.Position.X, 2) ) // Check whether the objects' columns are the same
                     {
                         var timestamp = Timestamp.Get(hitObject);
                         var otherTimestamp = Timestamp.Get(otherHitObject);
